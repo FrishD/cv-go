@@ -879,7 +879,7 @@
                 : "באיזה אזור בא לך לעבוד? 📍";
             this.addMessage(message, false);
 
-            this.renderSearchableInput("הקלד/י אזור מועדף...", '/data/locations.json', (value) => {
+            this.renderTextInput("הקלד/י עיר או אזור...", (value) => {
                 this.addMessage(value, true);
                 this.transitionTo('COLLECT_HOURS', { location: value });
             }, this.temporaryData.location);
@@ -1118,25 +1118,9 @@
             let fuse;
             let sourceData = [];
 
-            const validateInput = () => {
-                const value = input.value.trim();
-                const exactMatch = sourceData.find(item => item.toLowerCase() === value.toLowerCase());
-                sendBtn.disabled = !exactMatch;
-            };
-
-            const updateDropdown = (results) => {
-                if (results.length > 0) {
-                    dropdown.innerHTML = results.slice(0, 5).map(result =>
-                        `<div class="p-3 hover:bg-gray-700 cursor-pointer" data-value="${result.item}">${result.item}</div>`
-                    ).join('');
-                    dropdown.classList.remove('hidden');
-                } else {
-                    dropdown.classList.add('hidden');
-                }
-            };
-
             try {
                 const response = await fetch(dataUrl);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 sourceData = await response.json();
                 fuse = new Fuse(sourceData, {
                     isCaseSensitive: false,
@@ -1149,11 +1133,24 @@
                 return;
             }
 
-            validateInput(); // Initial validation for default value
+            const validateInput = () => {
+                const value = input.value.trim();
+                const exactMatch = sourceData.find(item => item.toLowerCase() === value.toLowerCase());
+                sendBtn.disabled = !exactMatch;
+            };
+
+            const updateDropdown = (results) => {
+                dropdown.innerHTML = results.slice(0, 5).map(result =>
+                    `<div class="p-3 hover:bg-gray-700 cursor-pointer" data-value="${result.item}">${result.item}</div>`
+                ).join('');
+                dropdown.classList.toggle('hidden', results.length === 0);
+            };
+
+            validateInput();
 
             input.addEventListener('input', () => {
                 const query = input.value;
-                if (query.length > 0) {
+                if (query) {
                     const results = fuse.search(query);
                     updateDropdown(results);
                 } else {
@@ -1172,25 +1169,21 @@
             });
 
             const submitHandler = () => {
-                const value = input.value.trim();
-                const exactMatch = sourceData.find(item => item.toLowerCase() === value.toLowerCase());
-                if (exactMatch) {
-                    callback(exactMatch);
-                } else {
-                    this.addMessage('אנא בחר/י אפשרות חוקית מהרשימה.', false);
+                if (!sendBtn.disabled) {
+                    callback(input.value.trim());
                 }
             };
 
             sendBtn.addEventListener('click', submitHandler);
             input.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
+                if (e.key === 'Enter' && !e.shiftKey && !sendBtn.disabled) {
                     e.preventDefault();
                     submitHandler();
                 }
             });
 
             document.addEventListener('click', (e) => {
-                if (!e.target.closest('.relative')) {
+                if (!input.contains(e.target) && !dropdown.contains(e.target)) {
                     dropdown.classList.add('hidden');
                 }
             }, true);

@@ -735,16 +735,37 @@
 
         render_VERIFICATION() {
             const data = this.temporaryData;
-            const missingFields = [];
-            if (!data.name || data.name === 'לא זוהה') missingFields.push({key: 'name', label: 'שם מלא'});
-            if (!data.email || data.email === 'לא זוהה') missingFields.push({key: 'email', label: 'אימייל'});
-            if (!data.phone || data.phone === 'לא זוהה') missingFields.push({key: 'phone', label: 'טלפון'});
 
-            if (missingFields.length === 0) {
-                this.render_VERIFY_SUCCESS(data);
+            // Use a more robust, sequential check for missing fields
+            if (!data.name || data.name.trim() === '' || data.name === 'לא זוהה') {
+                this.askForMissingField('name', 'שם מלא');
+            } else if (!data.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+                this.askForMissingField('email', 'אימייל');
+            } else if (!data.phone || data.phone.trim().length < 9) {
+                this.askForMissingField('phone', 'טלפון');
             } else {
-                this.render_VERIFY_MISSING(missingFields);
+                // All details are present and valid, proceed to success state
+                this.render_VERIFY_SUCCESS(data);
             }
+        }
+
+        askForMissingField(key, label) {
+            let message;
+            if (this.temporaryData.cvJustUploaded) {
+                 message = this.MESSAGES.AFTER_CV_UPLOAD_MISSING_ONE.replace('{missing}', label);
+                 // We only want to show this special message once.
+                 delete this.temporaryData.cvJustUploaded;
+            } else {
+                message = this.MESSAGES.VERIFY_MISSING_ONE.replace('{missing}', label);
+            }
+            this.addMessage(message, false);
+
+            this.renderTextInput(`הכנס/י ${label}`, (value) => {
+                this.addMessage(value, true);
+                this.temporaryData[key] = value;
+                // Loop back to the start of the verification process
+                this.transitionTo('VERIFICATION');
+            });
         }
 
         render_VERIFY_SUCCESS(data) {
@@ -776,30 +797,6 @@
             });
         }
 
-        render_VERIFY_MISSING(missingFields) {
-            let message;
-            if (this.temporaryData.cvJustUploaded) {
-                message = this.MESSAGES.AFTER_CV_UPLOAD_MISSING_ONE.replace('{missing}', missingFields[0].label);
-                delete this.temporaryData.cvJustUploaded;
-            } else if (missingFields.length === 1) {
-                message = this.MESSAGES.VERIFY_MISSING_ONE.replace('{missing}', missingFields[0].label);
-            } else {
-                this.addMessage(this.MESSAGES.VERIFY_MISSING_MANY, false);
-                message = `בוא/י נתחיל עם ${missingFields[0].label}.`;
-            }
-            this.addMessage(message, false);
-
-            this.renderTextInput(`הכנס/י ${missingFields[0].label}`, (value) => {
-                this.addMessage(value, true);
-                this.temporaryData[missingFields[0].key] = value;
-                missingFields.shift();
-                if (missingFields.length > 0) {
-                    this.render_VERIFY_MISSING(missingFields);
-                } else {
-                    this.transitionTo('VERIFICATION');
-                }
-            });
-        }
 
         render_VERIFY_EDIT_PICKER() {
             this.addMessage("איזה פרט תרצה/י לתקן?", false);

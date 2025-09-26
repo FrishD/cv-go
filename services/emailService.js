@@ -423,37 +423,53 @@ const sendDistributionTestEmail = async (testEmail, agencyInfo) => {
         const transporter = createTransporter()
         const dashboardUrl = `${process.env.BASE_URL || "http://localhost:3000"}/dashboard.html`;
         const mockCandidate = {
-            name: "דניאל כהן",
-            phone: "052-123-4567",
-            email: "daniel.cohen@example.com",
-            experienceYears: "5",
-            requestedPositions: "Full Stack Developer, Backend Developer",
-            region: "מרכז",
+            name: "ישראל ישראלי",
+            phone: "050-000-0000",
+            email: "israel.israeli@example.com",
+            experienceYears: "5+",
+            requestedPositions: "מהנדס/ת תוכנה",
+            region: "כל הארץ",
         };
 
         const contentBody = `
-            <p style="font-size: 16px; line-height: 1.6;">זהו אימייל בדיקה כדי לוודא שההגדרות לקבלת קורות חיים של מועמדים חדשים מוגדרות כראוי עבור הסוכנות שלך.</p>
-            <p style="font-size: 16px; line-height: 1.6;">להלן דוגמה לפרטי מועמד כפי שתקבלו:</p>
+            <p style="text-align: right; color: #c7c7cc; font-size: 16px; line-height: 1.6;">זהו אימייל בדיקה אוטומטי שנועד לוודא כי מערכת קבלת קורות החיים עבור סוכנות הגיוס שלך פועלת באופן תקין.</p>
+            <p style="text-align: right; color: #c7c7cc; font-size: 16px; line-height: 1.6;">קבלת אימייל זה מאשרת שהכתובת שהוגדרה (${testEmail}) מקבלת התראות בהצלחה. להלן דוגמה למבנה הנתונים שתקבלו בעת הפצת מועמד רלוונטי:</p>
             <br>
-            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 20px; border: 1px solid rgba(255, 255, 255, 0.1);">
-                <tr><td style="font-size: 18px; font-weight: 600; color: #ffffff; padding-bottom: 15px; font-family: 'Google Sans', 'Heebo', Arial, sans-serif;">פרופיל מועמד לדוגמה</td></tr>
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: rgba(40, 40, 40, 0.7); border-radius: 12px; padding: 20px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                <tr><td style="font-size: 18px; font-weight: 600; color: #ffffff; padding-bottom: 15px; font-family: 'Google Sans', 'Heebo', Arial, sans-serif; text-align: right;">פרופיל מועמד לדוגמה</td></tr>
                 <tr><td style="padding-top: 15px;">
-                    <table border="0" cellpadding="5" cellspacing="0" width="100%">
-                        <tr><td style="color: #c7c7cc;">שם</td><td style="color: #ffffff; text-align: left;">${mockCandidate.name}</td></tr>
-                        <tr><td style="color: #c7c7cc;">טלפון</td><td style="color: #ffffff; text-align: left;">${mockCandidate.phone}</td></tr>
-                        <tr><td style="color: #c7c7cc;">אימייל</td><td style="color: #ffffff; text-align: left;">${mockCandidate.email}</td></tr>
-                        <tr><td style="color: #c7c7cc;">ניסיון</td><td style="color: #ffffff; text-align: left;">${mockCandidate.experienceYears} שנים</td></tr>
+                    <table border="0" cellpadding="8" cellspacing="0" width="100%">
+                        <tr>
+                            <td style="color: #c7c7cc; text-align: right; font-family: 'Heebo', Arial, sans-serif; width: 40%;">שם מלא:</td>
+                            <td style="color: #ffffff; text-align: right; font-family: 'Heebo', Arial, sans-serif;">${mockCandidate.name}</td>
+                        </tr>
+                        <tr>
+                            <td style="color: #c7c7cc; text-align: right; font-family: 'Heebo', Arial, sans-serif;">טלפון:</td>
+                            <td style="color: #ffffff; text-align: right; font-family: 'Heebo', Arial, sans-serif;">${mockCandidate.phone}</td>
+                        </tr>
+                        <tr>
+                            <td style="color: #c7c7cc; text-align: right; font-family: 'Heebo', Arial, sans-serif;">דוא"ל:</td>
+                            <td style="color: #ffffff; text-align: right; font-family: 'Heebo', Arial, sans-serif;">${mockCandidate.email}</td>
+                        </tr>
+                        <tr>
+                            <td style="color: #c7c7cc; text-align: right; font-family: 'Heebo', Arial, sans-serif;">שנות ניסיון:</td>
+                            <td style="color: #ffffff; text-align: right; font-family: 'Heebo', Arial, sans-serif;">${mockCandidate.experienceYears}</td>
+                        </tr>
+                         <tr>
+                            <td style="color: #c7c7cc; text-align: right; font-family: 'Heebo', Arial, sans-serif;">תפקיד מבוקש:</td>
+                            <td style="color: #ffffff; text-align: right; font-family: 'Heebo', Arial, sans-serif;">${mockCandidate.requestedPositions}</td>
+                        </tr>
                     </table>
                 </td></tr>
             </table>
             <br>
-            <p style="font-size: 16px; line-height: 1.6;">כאשר מועמדים רלוונטיים יגישו את קורות החיים שלהם, תקבלו אימיילים דומים עם פרטיהם המלאים.</p>
+            <p style="text-align: right; color: #c7c7cc; font-size: 16px; line-height: 1.6;">כאשר מועמדים רלוונטיים יופצו למערכת, תקבלו אימיילים דומים עם פרטיהם המלאים.</p>
         `;
 
         const html = createEmailTemplate(
-            "בדיקת מערכת הפצת קורות חיים",
-            "הודעת בדיקה",
-            "שלום",
+            "בדיקת תקינות מערכת",
+            "בדיקת תקינות",
+            "שלום רב,",
             `צוות ${agencyInfo.companyName}`,
             contentBody,
             "חזרה ללוח הבקרה",
@@ -463,7 +479,7 @@ const sendDistributionTestEmail = async (testEmail, agencyInfo) => {
         const result = await transporter.sendMail({
             from: process.env.CVGO_EMAIL || "noreply@cvgo.pro",
             to: testEmail,
-            subject: "בדיקת מערכת הפצת קורות חיים של CVGO",
+            subject: "בדיקת תקינות מערכת הפצת קורות חיים - CVGO",
             html: html,
             headers: {
                 "X-Priority": "3",

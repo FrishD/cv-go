@@ -331,42 +331,42 @@
                         <div class="expandable-content">
                             <h4 class="info-label" style="margin-bottom: 8px;">הצהרה אישית</h4>
                             <div class="text-content">
-                                <div class="content-preview"><p>${renderBlurredPlaceholder(student.profile?.personalStatement, hasAccess) || '<em>לא נמסר מידע.</em>'}</p></div>
-                                <div class="content-full"><p>${hasAccess ? (student.profile?.personalStatement || '<em>לא נמסר מידע.</em>') : renderBlurredPlaceholder(student.profile?.personalStatement, hasAccess)}</p></div>
+                                <div class="content-preview"><p>${renderBlurredPlaceholder(student.personalStatement, hasAccess) || '<em>לא נמסר מידע.</em>'}</p></div>
+                                <div class="content-full"><p>${hasAccess ? (student.personalStatement || '<em>לא נמסר מידע.</em>') : renderBlurredPlaceholder(student.personalStatement, hasAccess)}</p></div>
                             </div>
-                            ${student.profile?.personalStatement && student.profile?.personalStatement.length > 200 ? '<button class="show-more-btn">קרא עוד</button>' : ''}
+                            ${student.personalStatement && student.personalStatement.length > 200 ? '<button class="show-more-btn">קרא עוד</button>' : ''}
                         </div>
                         <div class="expandable-content">
                              <h4 class="info-label" style="margin-bottom: 8px;">מידע נוסף</h4>
                              <div class="text-content">
-                                <div class="content-preview"><p>${renderBlurredPlaceholder(student.profile?.additionalInfo, hasAccess) || '<em>לא נמסר מידע.</em>'}</p></div>
-                                <div class="content-full"><p>${hasAccess ? (student.profile?.additionalInfo || '<em>לא נמסר מידע.</em>') : renderBlurredPlaceholder(student.profile?.additionalInfo, hasAccess)}</p></div>
+                                <div class="content-preview"><p>${renderBlurredPlaceholder(student.additionalInfo, hasAccess) || '<em>לא נמסר מידע.</em>'}</p></div>
+                                <div class="content-full"><p>${hasAccess ? (student.additionalInfo || '<em>לא נמסר מידע.</em>') : renderBlurredPlaceholder(student.additionalInfo, hasAccess)}</p></div>
                              </div>
-                             ${student.profile?.additionalInfo && student.profile?.additionalInfo.length > 200 ? '<button class="show-more-btn">קרא עוד</button>' : ''}
+                             ${student.additionalInfo && student.additionalInfo.length > 200 ? '<button class="show-more-btn">קרא עוד</button>' : ''}
                     </div>
                      <div class="expandable-content">
                          <h4 class="info-label" style="margin-bottom: 8px;">הישגים מיוחדים</h4>
                          <div class="text-content">
-                            <div class="content-preview"><p>${renderBlurredPlaceholder(student.profile?.specialRoles, hasAccess) || '<em>לא נמסר מידע.</em>'}</p></div>
-                            <div class="content-full"><p>${hasAccess ? (student.profile?.specialRoles || '<em>לא נמסר מידע.</em>') : renderBlurredPlaceholder(student.profile?.specialRoles, hasAccess)}</p></div>
+                            <div class="content-preview"><p>${renderBlurredPlaceholder(student.specialRoles, hasAccess) || '<em>לא נמסר מידע.</em>'}</p></div>
+                            <div class="content-full"><p>${hasAccess ? (student.specialRoles || '<em>לא נמסר מידע.</em>') : renderBlurredPlaceholder(student.specialRoles, hasAccess)}</p></div>
                          </div>
-                         ${student.profile?.specialRoles && student.profile?.specialRoles.length > 200 ? '<button class="show-more-btn">קרא עוד</button>' : ''}
+                         ${student.specialRoles && student.specialRoles.length > 200 ? '<button class="show-more-btn">קרא עוד</button>' : ''}
                         </div>
                         <div class="expandable-content">
                              <h4 class="info-label" style="margin-bottom: 8px;">כישורים רכים</h4>
                              <div class="text-content">
-                                <div class="content-preview"><p>${renderBlurredPlaceholder(student.profile?.softSkills, hasAccess) || '<em>לא נמסר מידע.</em>'}</p></div>
-                                <div class="content-full"><p>${hasAccess ? (student.profile?.softSkills || '<em>לא נמסר מידע.</em>') : renderBlurredPlaceholder(student.profile?.softSkills, hasAccess)}</p></div>
+                                <div class="content-preview"><p>${renderBlurredPlaceholder(student.softSkills, hasAccess) || '<em>לא נמסר מידע.</em>'}</p></div>
+                                <div class="content-full"><p>${hasAccess ? (student.softSkills || '<em>לא נמסר מידע.</em>') : renderBlurredPlaceholder(student.softSkills, hasAccess)}</p></div>
                              </div>
-                             ${student.profile?.softSkills && student.profile?.softSkills.length > 200 ? '<button class="show-more-btn">קרא עוד</button>' : ''}
+                             ${student.softSkills && student.softSkills.length > 200 ? '<button class="show-more-btn">קרא עוד</button>' : ''}
                         </div>
                         <div class="expandable-content">
                              <h4 class="info-label" style="margin-bottom: 8px;">דבר חשוב למעסיקים</h4>
                              <div class="text-content">
-                                <div class="content-preview"><p>${renderBlurredPlaceholder(student.profile?.keyInfo, hasAccess) || '<em>לא נמסר מידע.</em>'}</p></div>
-                                <div class="content-full"><p>${hasAccess ? (student.profile?.keyInfo || '<em>לא נמסר מידע.</em>') : renderBlurredPlaceholder(student.profile?.keyInfo, hasAccess)}</p></div>
+                                <div class="content-preview"><p>${renderBlurredPlaceholder(student.keyInfo, hasAccess) || '<em>לא נמסר מידע.</em>'}</p></div>
+                                <div class="content-full"><p>${hasAccess ? (student.keyInfo || '<em>לא נמסר מידע.</em>') : renderBlurredPlaceholder(student.keyInfo, hasAccess)}</p></div>
                              </div>
-                             ${student.profile?.keyInfo && student.profile?.keyInfo.length > 200 ? '<button class="show-more-btn">קרא עוד</button>' : ''}
+                             ${student.keyInfo && student.keyInfo.length > 200 ? '<button class="show-more-btn">קרא עוד</button>' : ''}
                         </div>
                     </div>
                 </div>
@@ -377,15 +377,15 @@
                 <ul class="info-list">
                     <li class="info-item">
                         <span class="info-label">LinkedIn</span>
-                        <span class="info-value">${student.profile?.links?.linkedin ? (hasAccess ? `<a href="${student.profile.links.linkedin}" target="_blank" class="file-download">פרופיל</a>` : 'קישור קיים') : 'לא נמסר'}</span>
+                        <span class="info-value">${student.links?.linkedin ? (hasAccess ? `<a href="${student.links.linkedin}" target="_blank" class="file-download">פרופיל</a>` : 'קישור קיים') : 'לא נמסר'}</span>
                     </li>
                     <li class="info-item">
                         <span class="info-label">GitHub</span>
-                        <span class="info-value">${student.profile?.links?.github ? (hasAccess ? `<a href="${student.profile.links.github}" target="_blank" class="file-download">פרופיל</a>` : 'קישור קיים') : 'לא נמסר'}</span>
+                        <span class="info-value">${student.links?.github ? (hasAccess ? `<a href="${student.links.github}" target="_blank" class="file-download">פרופיל</a>` : 'קישור קיים') : 'לא נמסר'}</span>
                     </li>
                     <li class="info-item">
                         <span class="info-label">Portfolio</span>
-                        <span class="info-value">${student.profile?.links?.portfolio ? (hasAccess ? `<a href="${student.profile.links.portfolio}" target="_blank" class="file-download">אתר</a>` : 'קישור קיים') : 'לא נמסר'}</span>
+                        <span class="info-value">${student.links?.portfolio ? (hasAccess ? `<a href="${student.links.portfolio}" target="_blank" class="file-download">אתר</a>` : 'קישור קיים') : 'לא נמסר'}</span>
                     </li>
                 </ul>
             </div>

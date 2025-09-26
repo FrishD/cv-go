@@ -591,6 +591,9 @@
                 COLLECT_HOURS: "סבבה. וכמה שעות שבועיות אתה/את יכול/ה לעבוד? ⏳",
                 COLLECT_SOFT_SKILLS: "עכשיו החלק שלך להתבלט! 🌟 אילו כישורים רכים את/ה מביא/ה לשולחן? למשל, עבודה בצוות או פתרון בעיות? 🧠",
                 COLLECT_KEY_INFO: "שאלה אחרונה וחשובה, {name}: מה הדבר הכי חשוב שמעסיקים צריכים לדעת עליך? אולי פרויקט שאת/ה גאה בו במיוחד, או מוטיבציה מטורפת? 🤩",
+                COLLECT_PERSONAL_STATEMENT: "יפה. עכשיו, יש לך הזדמנות לכתוב הצהרה אישית קצרה שתופיע בפרופיל שלך. מה היית רוצה שמעסיקים ידעו עליך? ✍️",
+                COLLECT_ADDITIONAL_INFO: "מעולה. יש עוד משהו שחשוב לך לציין?",
+                COLLECT_SPECIAL_ROLES: "כמעט אחרון! היו לך תפקידים מיוחדים או הובלת פרויקטים יוצאי דופן (בצבא, בלימודים, בהתנדבות)? 🎖️",
                 PROMPT_LINKS: "ויש לך לינקים שווים הצצה? (GitHub, אתר אישי, תיק עבודות וכו'). 🔗",
                 PROMPT_TERMS: "וואו! זהו, סיימנו! כל הכבוד. 🎉\nכדי שנוכל להשתמש בפרטים שלך, אני צריך שתאשר/י את <a href='/terms-of-use.html' target='_blank' class='text-blue-400 hover:underline'>תנאי השימוש</a> ו<a href='/privacy-policy.html' target='_blank' class='text-blue-400 hover:underline'>מדיניות הפרטיות</a> שלנו.",
                 SHOW_SUMMARY: "וואו! יצא לנו פרופיל פצצה, {name}. הנה סיכום שלו:",
@@ -896,7 +899,31 @@
             this.addMessage(this.MESSAGES.COLLECT_KEY_INFO, false);
             this.renderTextInput("פרויקט שאת/ה גאה בו במיוחד, או מוטיבציה מטורפת...", (value) => {
                 this.addMessage(value, true);
-                this.transitionTo('PROMPT_LINKS', { keyInfo: value });
+                this.transitionTo('COLLECT_PERSONAL_STATEMENT', { keyInfo: value });
+            });
+        }
+
+        render_COLLECT_PERSONAL_STATEMENT() {
+            this.addMessage(this.MESSAGES.COLLECT_PERSONAL_STATEMENT, false);
+            this.renderTextInput("כתוב/י הצהרה אישית...", (value) => {
+                this.addMessage(value, true);
+                this.transitionTo('COLLECT_ADDITIONAL_INFO', { personalStatement: value });
+            });
+        }
+
+        render_COLLECT_ADDITIONAL_INFO() {
+            this.addMessage(this.MESSAGES.COLLECT_ADDITIONAL_INFO, false);
+            this.renderTextInput("יש עוד משהו חשוב?", (value) => {
+                this.addMessage(value, true);
+                this.transitionTo('COLLECT_SPECIAL_ROLES', { additionalInfo: value });
+            });
+        }
+
+        render_COLLECT_SPECIAL_ROLES() {
+            this.addMessage(this.MESSAGES.COLLECT_SPECIAL_ROLES, false);
+            this.renderTextInput("ספר/י על תפקידים מיוחדים או פרויקטים...", (value) => {
+                this.addMessage(value, true);
+                this.transitionTo('PROMPT_LINKS', { specialRoles: value });
             });
         }
 
@@ -1029,10 +1056,11 @@
             input.focus();
 
             let fuse;
+            let sourceData = [];
             try {
                 const response = await fetch(dataUrl);
-                const data = await response.json();
-                fuse = new Fuse(data, {
+                sourceData = await response.json();
+                fuse = new Fuse(sourceData, {
                     isCaseSensitive: false,
                     includeScore: true,
                     threshold: 0.4,
@@ -1056,13 +1084,13 @@
 
             input.addEventListener('input', () => {
                 const query = input.value;
-                if (query.length > 1) {
+                sendBtn.disabled = !query;
+                if (query.length > 0) {
                     const results = fuse.search(query);
                     updateDropdown(results);
                 } else {
                     dropdown.classList.add('hidden');
                 }
-                sendBtn.disabled = !query;
             });
 
             dropdown.addEventListener('click', (e) => {
@@ -1077,13 +1105,29 @@
             const submitHandler = () => {
                 const value = input.value.trim();
                 if (value) {
-                    callback(value);
+                    // Check for exact match first (case-insensitive)
+                    const exactMatch = sourceData.find(item => item.toLowerCase() === value.toLowerCase());
+                    if (exactMatch) {
+                        callback(exactMatch);
+                        return;
+                    }
+
+                    // If no exact match, check for a very close fuzzy match
+                    const results = fuse.search(value);
+                    if (results.length > 0 && results[0].score < 0.1) {
+                        callback(results[0].item);
+                        return;
+                    }
+
+                    // If still no good match, inform the user
+                    this.addMessage('אנא בחר/י אפשרות מהרשימה המוצעת.', false);
                 }
             };
 
             sendBtn.addEventListener('click', submitHandler);
             input.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
+                    e.preventDefault();
                     submitHandler();
                 }
             });
@@ -1105,6 +1149,9 @@
                 const firstName = name.split(' ')[0];
                 personalizedContent = content.replace(/{name}/g, firstName);
             }
+
+            // Parse markdown links
+            personalizedContent = personalizedContent.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" class="text-blue-400 hover:underline">$1</a>');
 
             const timeString = showTime ? new Date().toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' }) : '';
 

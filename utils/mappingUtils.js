@@ -18,8 +18,22 @@ const hoursMap = {
 function mapDegree(hebrewDegree) {
     if (!hebrewDegree) return 'other';
     const cleanDegree = String(hebrewDegree).trim();
-    // Fallback to 'other' if the exact key is not found.
-    return degreeMap[cleanDegree] || 'other';
+
+    // First, try a direct match
+    if (degreeMap[cleanDegree]) {
+        return degreeMap[cleanDegree];
+    }
+
+    // As a fallback, strip emojis/symbols and compare text
+    const textOnlyInput = cleanDegree.replace(/[^\u0590-\u05FF\s]/g, '').trim();
+    for (const key in degreeMap) {
+        const textOnlyKey = key.replace(/[^\u0590-\u05FF\s]/g, '').trim();
+        if (textOnlyKey === textOnlyInput && textOnlyInput !== '') {
+            return degreeMap[key];
+        }
+    }
+
+    return 'other';
 }
 
 function mapHours(hebrewHours) {

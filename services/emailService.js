@@ -26,18 +26,18 @@ const createTransporter = () => {
 // Email-safe template generator
 const createEmailTemplate = (title, successBadgeText, greeting, name, contentBody, ctaText, ctaUrl) => {
     const baseUrl = process.env.BASE_URL || "http://localhost:3000";
-    // Email-safe styles using inline CSS and tables for layout
-    const bodyStyle = `font-family: 'Heebo', Arial, sans-serif; background-color: #000000; color: #FFFFFF; margin: 0; padding: 0; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%;`;
-    const wrapperStyle = `width: 100%; background-color: #000000; padding: 40px 20px;`;
-    const containerStyle = `max-width: 600px; margin: 0 auto; background-color: #1a1a1a; border: 1px solid #333333; border-radius: 12px;`;
-    const headerStyle = `padding: 40px 30px 30px; text-align: center; border-bottom: 1px solid #333333;`;
+    // Updated styles for a lighter, more professional look
+    const bodyStyle = `font-family: 'Heebo', Arial, sans-serif; background-color: #f4f7f6; color: #333333; margin: 0; padding: 0; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%;`;
+    const wrapperStyle = `width: 100%; background-color: #f4f7f6; padding: 40px 20px;`;
+    const containerStyle = `max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 12px;`;
+    const headerStyle = `padding: 40px 30px 30px; text-align: center; border-bottom: 1px solid #e0e0e0;`;
     const logoStyle = `height: 60px; width: auto; margin-bottom: 20px;`;
-    const contentStyle = `padding: 40px 30px; color: #FFFFFF;`;
-    const badgeStyle = `background-color: #223322; color: #30D158; padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; border: 1px solid #30D158;`;
-    const greetingStyle = `color: #FFFFFF; font-size: 24px; font-weight: 600; margin: 0 0 15px 0;`;
-    const textStyle = `color: #DDDDDD; font-size: 16px; line-height: 1.6;`;
+    const contentStyle = `padding: 40px 30px; color: #333333;`;
+    const badgeStyle = `background-color: #E6F7FF; color: #007AFF; padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; border: 1px solid #B3D8FF;`;
+    const greetingStyle = `color: #111111; font-size: 24px; font-weight: 600; margin: 0 0 15px 0;`;
+    const textStyle = `color: #555555; font-size: 16px; line-height: 1.6;`;
     const buttonStyle = `background-color: #007AFF; color: #FFFFFF; padding: 16px 32px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; display: inline-block;`;
-    const footerStyle = `padding: 30px; text-align: center; border-top: 1px solid #333333; color: #AAAAAA; font-size: 13px;`;
+    const footerStyle = `padding: 30px; text-align: center; border-top: 1px solid #e0e0e0; color: #888888; font-size: 13px;`;
 
     return `
         <!DOCTYPE html>
@@ -57,8 +57,8 @@ const createEmailTemplate = (title, successBadgeText, greeting, name, contentBod
                             <tr>
                                 <td align="center" style="${headerStyle}">
                                     <img src="${baseUrl}/logo.png" alt="CVGO Logo" style="${logoStyle}" />
-                                    <h1 style="color: #FFFFFF; font-size: 28px; font-weight: 700; margin: 0; font-family: 'Heebo', Arial, sans-serif;">CVGO</h1>
-                                    <p style="color: #AAAAAA; font-size: 13px; font-weight: 500; font-family: 'Heebo', Arial, sans-serif;">פלטפורמת גיוס מקצועית</p>
+                                    <h1 style="color: #111111; font-size: 28px; font-weight: 700; margin: 0; font-family: 'Heebo', Arial, sans-serif;">CVGO</h1>
+                                    <p style="color: #555555; font-size: 13px; font-weight: 500; font-family: 'Heebo', Arial, sans-serif;">פלטפורמת גיוס מקצועית</p>
                                 </td>
                             </tr>
                             <!-- Main Content -->

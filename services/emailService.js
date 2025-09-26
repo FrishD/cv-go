@@ -26,18 +26,18 @@ const createTransporter = () => {
 // Email-safe template generator
 const createEmailTemplate = (title, successBadgeText, greeting, name, contentBody, ctaText, ctaUrl) => {
     const baseUrl = process.env.BASE_URL || "http://localhost:3000";
-    // Updated styles for a lighter, more professional look
-    const bodyStyle = `font-family: 'Heebo', Arial, sans-serif; background-color: #f4f7f6; color: #333333; margin: 0; padding: 0; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%;`;
-    const wrapperStyle = `width: 100%; background-color: #f4f7f6; padding: 40px 20px;`;
-    const containerStyle = `max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 12px;`;
-    const headerStyle = `padding: 40px 30px 30px; text-align: center; border-bottom: 1px solid #e0e0e0;`;
-    const logoStyle = `height: 60px; width: auto; margin-bottom: 20px;`;
-    const contentStyle = `padding: 40px 30px; color: #333333;`;
-    const badgeStyle = `background-color: #E6F7FF; color: #007AFF; padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; border: 1px solid #B3D8FF;`;
-    const greetingStyle = `color: #111111; font-size: 24px; font-weight: 600; margin: 0 0 15px 0;`;
-    const textStyle = `color: #555555; font-size: 16px; line-height: 1.6;`;
-    const buttonStyle = `background-color: #007AFF; color: #FFFFFF; padding: 16px 32px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; display: inline-block;`;
-    const footerStyle = `padding: 30px; text-align: center; border-top: 1px solid #e0e0e0; color: #888888; font-size: 13px;`;
+    // Styles inspired by verify.html, adapted for email clients
+    const bodyStyle = `font-family: 'Google Sans', 'Heebo', Arial, sans-serif; background-color: #0d0d0d; color: #ffffff; margin: 0; padding: 0; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%;`;
+    const wrapperStyle = `width: 100%; background-color: #0d0d0d; padding: 40px 20px;`;
+    const containerStyle = `max-width: 600px; margin: 0 auto; background-color: #1c1c1e; border: 1px solid #3a3a3c; border-radius: 24px;`;
+    const headerStyle = `padding: 40px 30px 30px; text-align: center; border-bottom: 1px solid #3a3a3c;`;
+    const logoStyle = `height: 50px; width: auto; margin-bottom: 20px;`;
+    const contentStyle = `padding: 40px 30px; color: #f2f2f7;`;
+    const badgeStyle = `background-color: rgba(0, 122, 255, 0.15); color: #0091ff; padding: 12px 24px; border-radius: 12px; font-size: 14px; font-weight: 600; border: 1px solid rgba(0, 122, 255, 0.3);`;
+    const greetingStyle = `color: #ffffff; font-size: 24px; font-weight: 600; margin: 0 0 15px 0;`;
+    const textStyle = `color: #c7c7cc; font-size: 16px; line-height: 1.6;`;
+    const buttonStyle = `background-color: #007AFF; color: #FFFFFF; padding: 16px 32px; border-radius: 14px; font-size: 16px; font-weight: 600; text-decoration: none; display: inline-block;`;
+    const footerStyle = `padding: 30px; text-align: center; border-top: 1px solid #3a3a3c; color: #8e8e93; font-size: 13px;`;
 
     return `
         <!DOCTYPE html>
@@ -47,6 +47,7 @@ const createEmailTemplate = (title, successBadgeText, greeting, name, contentBod
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>CVGO - ${title}</title>
             <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet" type="text/css">
+            <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" type="text/css">
         </head>
         <body style="${bodyStyle}">
             <table width="100%" border="0" cellspacing="0" cellpadding="0" style="${wrapperStyle}">
@@ -57,8 +58,8 @@ const createEmailTemplate = (title, successBadgeText, greeting, name, contentBod
                             <tr>
                                 <td align="center" style="${headerStyle}">
                                     <img src="${baseUrl}/logo.png" alt="CVGO Logo" style="${logoStyle}" />
-                                    <h1 style="color: #111111; font-size: 28px; font-weight: 700; margin: 0; font-family: 'Heebo', Arial, sans-serif;">CVGO</h1>
-                                    <p style="color: #555555; font-size: 13px; font-weight: 500; font-family: 'Heebo', Arial, sans-serif;">פלטפורמת גיוס מקצועית</p>
+                                    <h1 style="color: #f2f2f7; font-size: 28px; font-weight: 700; margin: 0; font-family: 'Google Sans', 'Heebo', Arial, sans-serif;">CVGO</h1>
+                                    <p style="color: #8e8e93; font-size: 13px; font-weight: 500; font-family: 'Google Sans', 'Heebo', Arial, sans-serif;">פלטפורמת גיוס מקצועית</p>
                                 </td>
                             </tr>
                             <!-- Main Content -->
@@ -66,8 +67,8 @@ const createEmailTemplate = (title, successBadgeText, greeting, name, contentBod
                                 <td style="${contentStyle}">
                                     <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                         <tr><td align="center" style="padding-bottom: 30px;"><span style="${badgeStyle}">${successBadgeText}</span></td></tr>
-                                        <tr><td style="${greetingStyle}; font-family: 'Heebo', Arial, sans-serif;">${greeting} ${name},</td></tr>
-                                        <tr><td style="${textStyle}; font-family: 'Heebo', Arial, sans-serif;">${contentBody}</td></tr>
+                                        <tr><td style="${greetingStyle}; font-family: 'Google Sans', 'Heebo', Arial, sans-serif;">${greeting} ${name},</td></tr>
+                                        <tr><td style="${textStyle}; font-family: 'Google Sans', 'Heebo', Arial, sans-serif;">${contentBody}</td></tr>
                                         ${ctaUrl ? `<tr><td align="center" style="padding-top: 30px;"><a href="${ctaUrl}" target="_blank" style="${buttonStyle}">${ctaText}</a></td></tr>` : ""}
                                     </table>
                                 </td>
@@ -75,7 +76,7 @@ const createEmailTemplate = (title, successBadgeText, greeting, name, contentBod
                             <!-- Footer -->
                             <tr>
                                 <td align="center" style="${footerStyle}">
-                                    <p style="margin: 4px 0; font-family: 'Heebo', Arial, sans-serif;">© 2025 CVGO. כל הזכויות שמורות.</p>
+                                    <p style="margin: 4px 0; font-family: 'Google Sans', 'Heebo', Arial, sans-serif;">© 2025 CVGO. כל הזכויות שמורות.</p>
                                 </td>
                             </tr>
                         </table>

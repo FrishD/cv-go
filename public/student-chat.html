@@ -1115,14 +1115,26 @@
             const dropdown = document.getElementById(dropdownId);
             input.focus();
 
+            let fuse;
+            let sourceData = [];
+
             const validateInput = () => {
                 const value = input.value.trim();
                 const exactMatch = sourceData.find(item => item.toLowerCase() === value.toLowerCase());
                 sendBtn.disabled = !exactMatch;
             };
 
-            let fuse;
-            let sourceData = [];
+            const updateDropdown = (results) => {
+                if (results.length > 0) {
+                    dropdown.innerHTML = results.slice(0, 5).map(result =>
+                        `<div class="p-3 hover:bg-gray-700 cursor-pointer" data-value="${result.item}">${result.item}</div>`
+                    ).join('');
+                    dropdown.classList.remove('hidden');
+                } else {
+                    dropdown.classList.add('hidden');
+                }
+            };
+
             try {
                 const response = await fetch(dataUrl);
                 sourceData = await response.json();
@@ -1136,18 +1148,8 @@
                 this.addMessage('שגיאה בטעינת הנתונים. אנא רענן את העמוד.', false);
                 return;
             }
-            validateInput();
 
-            const updateDropdown = (results) => {
-                if (results.length > 0) {
-                    dropdown.innerHTML = results.slice(0, 5).map(result =>
-                        `<div class="p-3 hover:bg-gray-700 cursor-pointer" data-value="${result.item}">${result.item}</div>`
-                    ).join('');
-                    dropdown.classList.remove('hidden');
-                } else {
-                    dropdown.classList.add('hidden');
-                }
-            };
+            validateInput(); // Initial validation for default value
 
             input.addEventListener('input', () => {
                 const query = input.value;

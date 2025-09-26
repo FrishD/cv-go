@@ -1149,12 +1149,6 @@
                 }
             };
 
-            const validateInput = () => {
-                const value = input.value.trim();
-                const exactMatch = sourceData.find(item => item.toLowerCase() === value.toLowerCase());
-                sendBtn.disabled = !exactMatch;
-            };
-
             input.addEventListener('input', () => {
                 const query = input.value;
                 if (query.length > 0) {

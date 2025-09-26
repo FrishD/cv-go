@@ -1001,7 +1001,11 @@
         render_FINAL_MESSAGE() {
             this.addMessage(this.MESSAGES.FINAL_MESSAGE, false);
             document.getElementById('inputArea').innerHTML = '';
-            document.getElementById('completionModal').classList.remove('hidden');
+            // Show the completion modal
+            const completionModal = document.getElementById('completionModal');
+            if (completionModal) {
+                completionModal.classList.remove('hidden');
+            }
         }
 
         generateProfileSummary() {

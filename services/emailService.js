@@ -27,17 +27,17 @@ const createTransporter = () => {
 const createEmailTemplate = (title, successBadgeText, greeting, name, contentBody, ctaText, ctaUrl) => {
     const baseUrl = process.env.BASE_URL || "http://localhost:3000";
     // Styles inspired by verify.html, adapted for email clients
-    const bodyStyle = `font-family: 'Google Sans', 'Heebo', Arial, sans-serif; background-color: #0d0d0d; color: #ffffff; margin: 0; padding: 0; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%;`;
-    const wrapperStyle = `width: 100%; background-color: #0d0d0d; padding: 40px 20px;`;
-    const containerStyle = `max-width: 600px; margin: 0 auto; background-color: #1c1c1e; border: 1px solid #3a3a3c; border-radius: 24px;`;
-    const headerStyle = `padding: 40px 30px 30px; text-align: center; border-bottom: 1px solid #3a3a3c;`;
+    const bodyStyle = `font-family: 'Google Sans', 'Heebo', Arial, sans-serif; background-color: #000000; color: #ffffff; margin: 0; padding: 0; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; background-image: radial-gradient(circle, rgba(0, 45, 100, 0.8) 0%, rgba(0, 45, 100, 0.2) 70%, rgba(0, 45, 100, 0.1) 100%);`;
+    const wrapperStyle = `width: 100%; background-color: transparent; padding: 40px 20px;`;
+    const containerStyle = `max-width: 600px; margin: 0 auto; background-color: rgba(28, 28, 30, 0.7); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 24px; backdrop-filter: blur(50px); -webkit-backdrop-filter: blur(50px);`;
+    const headerStyle = `padding: 40px 30px 30px; text-align: center; border-bottom: 1px solid rgba(255, 255, 255, 0.12);`;
     const logoStyle = `height: 50px; width: auto; margin-bottom: 20px;`;
     const contentStyle = `padding: 40px 30px; color: #f2f2f7;`;
     const badgeStyle = `background-color: rgba(0, 122, 255, 0.15); color: #0091ff; padding: 12px 24px; border-radius: 12px; font-size: 14px; font-weight: 600; border: 1px solid rgba(0, 122, 255, 0.3);`;
     const greetingStyle = `color: #ffffff; font-size: 24px; font-weight: 600; margin: 0 0 15px 0;`;
     const textStyle = `color: #c7c7cc; font-size: 16px; line-height: 1.6;`;
     const buttonStyle = `background-color: #007AFF; color: #FFFFFF; padding: 16px 32px; border-radius: 14px; font-size: 16px; font-weight: 600; text-decoration: none; display: inline-block;`;
-    const footerStyle = `padding: 30px; text-align: center; border-top: 1px solid #3a3a3c; color: #8e8e93; font-size: 13px;`;
+    const footerStyle = `padding: 30px; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.12); color: #8e8e93; font-size: 13px;`;
 
     return `
         <!DOCTYPE html>

@@ -136,6 +136,7 @@ class StudentService {
 
             student.softSkills = profileData.softSkills;
             student.keyInfo = profileData.keyInfo;
+            student.specialRoles = profileData.specialRoles;
 
             // A simple way to handle links, assuming one string
             if (profileData.links) {

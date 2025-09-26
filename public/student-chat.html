@@ -340,6 +340,9 @@
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             backdrop-filter: blur(20px);
+            white-space: normal;
+            height: auto;
+            line-height: 1.4;
         }
 
         .option-button:hover {
@@ -571,27 +574,25 @@
             return {
                 GREETING: "היי! 🤩 בוא/י נבנה לך פרופיל סטודנט 🔥. זה יעזור לנו להתאים לך משרות היסטריות. מוכנ/ה?",
                 PROMPT_CV_UPLOAD: "מעולה! קודם כל, בוא/י נעלה קורות חיים. זה יעזור לנו למלא חלק מהפרטים אוטומטית.",
-                AFTER_CV_UPLOAD: "מעולה! ראיתי שהעלית קובץ קורות חיים, תודה. זה עוזר לנו ממש. 👍",
+                AFTER_CV_UPLOAD_AND_VERIFY: "מעולה! ראיתי שהעלית קובץ קורות חיים. 👍\nחילצתי ממנו את הפרטים הבאים:\n👤 {name}\n📞 {phone}\n✉️ {email}\nהכל נכון?",
+                AFTER_CV_UPLOAD_MISSING_ONE: "מעולה! העלאת קובץ קורות חיים. 👍\nנראה שחסר לנו רק את ה{missing} שלך, מהו?",
                 VERIFY_FOUND: "היי {name}! רק כדי לוודא, הפרטים שלך הם:\n📞 {phone}\n✉️ {email}\nנכון? אם לא, פשוט תעדכן/י אותי! 😊",
                 VERIFY_MISSING_ONE: "נראה שחסר לנו פרט אחד קטן... מה ה{missing} שלך? ✍️",
                 VERIFY_MISSING_MANY: "כדי שנוכל להתחיל, אני צריך עוד כמה פרטים.",
-                VERIFY_AFTER_CONFIRM: "מעולה {name}! הכל נשמר. בוא/י נתחיל עם שאלות על הלימודים שלך.",
-                COLLECT_INSTITUTION: "באיזה מוסד לימודים אתה/את לומד/ת? 🏫",
+                AFTER_CONFIRM_AND_PROMPT_INSTITUTION: "מעולה {name}! הכל נשמר. בוא/י נתחיל עם שאלות על הלימודים שלך.\nבאיזה מוסד לימודים אתה/את לומד/ת? 🏫",
                 COLLECT_MAJOR: "אחלה! ומהו תחום הלימודים (החוג) שלך? 📚",
                 COLLECT_DEGREE_TYPE: "מצוין, {name}. ומה סוג הלימודים שלך?",
                 COLLECT_YEAR: "באיזו שנה אתה/את בלימודים? 🤔",
                 COLLECT_GPA: "ומה הממוצע שלך? אל תתבייש/י! 😉",
                 PROMPT_TRANSCRIPT: "כדי שזה יהיה רשמי, צריך לראות את גיליון הציונים שלך. תוכל/י להעלות אותו כאן? 📂",
-                AFTER_TRANSCRIPT_UPLOAD: "גליון הציונים נשמר בהצלחה!",
-                PROMPT_EXPERIENCE: "עכשיו בוא/י נדבר על ניסיון. יש לך ניסיון רלוונטי מהתנדבות, התמחות או עבודה? 💼",
+                AFTER_TRANSCRIPT_AND_PROMPT_EXPERIENCE: "גליון הציונים נשמר בהצלחה! עכשיו בוא/י נדבר על ניסיון. יש לך ניסיון רלוונטי מהתנדבות, התמחות או עבודה? 💼",
                 EXPERIENCE_YES: "יאללה! ספר/י בקטנה על התפקיד הכי שווה שעשית. 📝",
-                EXPERIENCE_NO: "בקטנה! 🤩 בשביל זה אנחנו כאן, כדי למצוא לך את המשרה הראשונה. בוא/י נמשיך.",
-                COLLECT_LOCATION: "כמעט סיימנו! בוא/י נבין איזו משרה בדיוק אתה/את רוצה. באיזה אזור בא לך לעבוד? 📍",
+                EXPERIENCE_NO_AND_PROMPT_LOCATION: "בקטנה! 🤩 בשביל זה אנחנו כאן, כדי למצוא לך את המשרה הראשונה. בוא/י נמשיך.\nכמעט סיימנו! באיזה אזור בא לך לעבוד? 📍",
                 COLLECT_HOURS: "סבבה. וכמה שעות שבועיות אתה/את יכול/ה לעבוד? ⏳",
                 COLLECT_SOFT_SKILLS: "עכשיו החלק שלך להתבלט! 🌟 אילו כישורים רכים את/ה מביא/ה לשולחן? למשל, עבודה בצוות או פתרון בעיות? 🧠",
                 COLLECT_KEY_INFO: "שאלה אחרונה וחשובה, {name}: מה הדבר הכי חשוב שמעסיקים צריכים לדעת עליך? אולי פרויקט שאת/ה גאה בו במיוחד, או מוטיבציה מטורפת? 🤩",
                 PROMPT_LINKS: "ויש לך לינקים שווים הצצה? (GitHub, אתר אישי, תיק עבודות וכו'). 🔗",
-                PROMPT_TERMS: "וואו! זהו, סיימנו! כל הכבוד. 🎉\nכדי שנוכל להשתמש בפרטים שלך, אני צריך שתאשר/י את תנאי השימוש ומדיניות הפרטיות שלנו.",
+                PROMPT_TERMS: "וואו! זהו, סיימנו! כל הכבוד. 🎉\nכדי שנוכל להשתמש בפרטים שלך, אני צריך שתאשר/י את <a href='/terms-of-use.html' target='_blank' class='text-blue-400 hover:underline'>תנאי השימוש</a> ו<a href='/privacy-policy.html' target='_blank' class='text-blue-400 hover:underline'>מדיניות הפרטיות</a> שלנו.",
                 SHOW_SUMMARY: "וואו! יצא לנו פרופיל פצצה, {name}. הנה סיכום שלו:",
                 FINAL_MESSAGE: "הפרופיל נשמר. אנחנו נתחיל לחפש עבורך את ההזדמנויות הכי טובות. המון בהצלחה! ✨",
                 ERROR_GENERAL: "אופס, משהו השתבש. אנא רענן/י את העמוד ונסה/י שוב.",
@@ -677,14 +678,13 @@
                 if (!data.success) throw new Error(data.error || 'File upload failed');
 
                 if (uploadType === 'cv') {
-                    this.addMessage(this.MESSAGES.AFTER_CV_UPLOAD, false);
                     this.parsedData = data.parsedData || {};
                     this.temporaryData.name = this.parsedData.name;
                     this.temporaryData.email = this.parsedData.email;
                     this.temporaryData.phone = this.parsedData.phone;
+                    this.temporaryData.cvJustUploaded = true; // Flag for combined message
                     this.transitionTo('VERIFICATION');
                 } else {
-                    this.addMessage(this.MESSAGES.AFTER_TRANSCRIPT_UPLOAD, false);
                     this.transitionTo('PROMPT_EXPERIENCE');
                 }
             } catch (error) {
@@ -709,10 +709,19 @@
         }
 
         render_VERIFY_SUCCESS(data) {
-            let message = this.MESSAGES.VERIFY_FOUND
-                .replace('{name}', data.name)
-                .replace('{phone}', data.phone)
-                .replace('{email}', data.email);
+            let message;
+            if (this.temporaryData.cvJustUploaded) {
+                message = this.MESSAGES.AFTER_CV_UPLOAD_AND_VERIFY
+                    .replace('{name}', data.name || 'לא זוהה')
+                    .replace('{phone}', data.phone || 'לא זוהה')
+                    .replace('{email}', data.email || 'לא זוהה');
+                delete this.temporaryData.cvJustUploaded;
+            } else {
+                 message = this.MESSAGES.VERIFY_FOUND
+                    .replace('{name}', data.name)
+                    .replace('{phone}', data.phone)
+                    .replace('{email}', data.email);
+            }
             this.addMessage(message, false);
 
             this.renderButtons([
@@ -721,7 +730,6 @@
             ], (option) => {
                 this.addMessage(option.label, true);
                 if (option.value === 'correct') {
-                    this.addMessage(this.MESSAGES.VERIFY_AFTER_CONFIRM, false);
                     this.transitionTo('COLLECT_INSTITUTION');
                 } else {
                     this.transitionTo('VERIFY_EDIT_PICKER');
@@ -730,12 +738,17 @@
         }
 
         render_VERIFY_MISSING(missingFields) {
-            if (missingFields.length === 1) {
-                this.addMessage(this.MESSAGES.VERIFY_MISSING_ONE.replace('{missing}', missingFields[0].label), false);
+            let message;
+            if (this.temporaryData.cvJustUploaded) {
+                message = this.MESSAGES.AFTER_CV_UPLOAD_MISSING_ONE.replace('{missing}', missingFields[0].label);
+                delete this.temporaryData.cvJustUploaded;
+            } else if (missingFields.length === 1) {
+                message = this.MESSAGES.VERIFY_MISSING_ONE.replace('{missing}', missingFields[0].label);
             } else {
                 this.addMessage(this.MESSAGES.VERIFY_MISSING_MANY, false);
-                this.addMessage(`בוא/י נתחיל עם ${missingFields[0].label}.`, false);
+                message = `בוא/י נתחיל עם ${missingFields[0].label}.`;
             }
+            this.addMessage(message, false);
 
             this.renderTextInput(`הכנס/י ${missingFields[0].label}`, (value) => {
                 this.addMessage(value, true);
@@ -773,8 +786,8 @@
         }
 
         render_COLLECT_INSTITUTION() {
-            this.addMessage(this.MESSAGES.COLLECT_INSTITUTION, false);
-            this.renderSearchableInput("הקלד/י את שם המוסד...", '/config/institutions.json', (value) => {
+            this.addMessage(this.MESSAGES.AFTER_CONFIRM_AND_PROMPT_INSTITUTION, false);
+            this.renderSearchableInput("הקלד/י את שם המוסד...", '/data/institutions.json', (value) => {
                 this.addMessage(value, true);
                 this.transitionTo('COLLECT_MAJOR', { institution: value });
             });
@@ -782,7 +795,7 @@
 
         render_COLLECT_MAJOR() {
             this.addMessage(this.MESSAGES.COLLECT_MAJOR, false);
-            this.renderSearchableInput("הקלד/י את תחום הלימודים...", '/config/studyFields.json', (value) => {
+            this.renderSearchableInput("הקלד/י את תחום הלימודים...", '/data/majors.json', (value) => {
                 this.addMessage(value, true);
                 this.transitionTo('COLLECT_DEGREE_TYPE', { major: value });
             });
@@ -829,7 +842,7 @@
         }
 
         render_PROMPT_EXPERIENCE() {
-            this.addMessage(this.MESSAGES.PROMPT_EXPERIENCE, false);
+            this.addMessage(this.MESSAGES.AFTER_TRANSCRIPT_AND_PROMPT_EXPERIENCE, false);
             this.renderButtons([
                 { label: '👍 כן, יש לי', value: 'yes' },
                 { label: '👎 לא, עדיין אין לי', value: 'no' }
@@ -838,7 +851,6 @@
                 if (option.value === 'yes') {
                     this.transitionTo('COLLECT_EXPERIENCE_DETAILS');
                 } else {
-                    this.addMessage(this.MESSAGES.EXPERIENCE_NO, false);
                     this.transitionTo('COLLECT_LOCATION', { experience: 'אין' });
                 }
             });
@@ -853,8 +865,12 @@
         }
 
         render_COLLECT_LOCATION() {
-            this.addMessage(this.MESSAGES.COLLECT_LOCATION, false);
-            this.renderSearchableInput("הקלד/י אזור מועדף...", '/config/locations.json', (value) => {
+            const message = this.temporaryData.experience === 'אין'
+                ? this.MESSAGES.EXPERIENCE_NO_AND_PROMPT_LOCATION
+                : this.MESSAGES.COLLECT_LOCATION;
+            this.addMessage(message, false);
+
+            this.renderSearchableInput("הקלד/י אזור מועדף...", '/data/locations.json', (value) => {
                 this.addMessage(value, true);
                 this.transitionTo('COLLECT_HOURS', { location: value });
             });
@@ -1089,9 +1105,6 @@
                 const firstName = name.split(' ')[0];
                 personalizedContent = content.replace(/{name}/g, firstName);
             }
-
-            // Parse markdown links
-            personalizedContent = personalizedContent.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" class="text-blue-400 hover:underline">$1</a>');
 
             const timeString = showTime ? new Date().toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' }) : '';
 

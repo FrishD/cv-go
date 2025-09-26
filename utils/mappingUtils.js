@@ -16,21 +16,30 @@ const hoursMap = {
 };
 
 function mapDegree(hebrewDegree) {
-    return degreeMap[hebrewDegree] || '';
+    if (!hebrewDegree) return 'other';
+    const cleanDegree = String(hebrewDegree).trim();
+    // Fallback to 'other' if the exact key is not found.
+    return degreeMap[cleanDegree] || 'other';
 }
 
 function mapHours(hebrewHours) {
-    // Handle direct mapping first
-    if (hoursMap[hebrewHours]) {
-        return hoursMap[hebrewHours];
+    if (!hebrewHours) return 'flexible'; // Default to flexible
+    const hoursStr = String(hebrewHours).trim();
+
+    // Check for string-based mapping first
+    if (hoursMap[hoursStr]) {
+        return hoursMap[hoursStr];
     }
-    // Handle numeric strings
-    const hours = parseInt(hebrewHours, 10);
+
+    // Then check for numeric mapping
+    const hours = parseInt(hoursStr, 10);
     if (!isNaN(hours)) {
         if (hours >= 35) return 'full_time';
         if (hours > 0) return 'part_time';
     }
-    return '';
+
+    // Default for any other case (e.g. non-numeric string not in map)
+    return 'flexible';
 }
 
 module.exports = {

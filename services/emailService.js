@@ -32,10 +32,10 @@ const createEmailTemplate = (title, successBadgeText, greeting, name, contentBod
     const containerStyle = `max-width: 600px; margin: 0 auto; background-color: rgba(28, 28, 30, 0.7); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 24px; backdrop-filter: blur(50px); -webkit-backdrop-filter: blur(50px);`;
     const headerStyle = `padding: 40px 30px 30px; text-align: center; border-bottom: 1px solid rgba(255, 255, 255, 0.12);`;
     const logoStyle = `height: 50px; width: auto; margin-bottom: 20px;`;
-    const contentStyle = `padding: 40px 30px; color: #f2f2f7;`;
+    const contentStyle = `padding: 40px 30px; color: #f2f2f7; text-align: right;`;
     const badgeStyle = `background-color: rgba(0, 122, 255, 0.15); color: #0091ff; padding: 12px 24px; border-radius: 12px; font-size: 14px; font-weight: 600; border: 1px solid rgba(0, 122, 255, 0.3);`;
-    const greetingStyle = `color: #ffffff; font-size: 24px; font-weight: 600; margin: 0 0 15px 0;`;
-    const textStyle = `color: #c7c7cc; font-size: 16px; line-height: 1.6;`;
+    const greetingStyle = `color: #ffffff; font-size: 24px; font-weight: 600; margin: 0 0 15px 0; text-align: right;`;
+    const textStyle = `color: #c7c7cc; font-size: 16px; line-height: 1.6; text-align: right;`;
     const buttonStyle = `background-color: #007AFF; color: #FFFFFF; padding: 16px 32px; border-radius: 14px; font-size: 16px; font-weight: 600; text-decoration: none; display: inline-block;`;
     const footerStyle = `padding: 30px; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.12); color: #8e8e93; font-size: 13px;`;
 
@@ -423,48 +423,47 @@ const sendDistributionTestEmail = async (testEmail, agencyInfo) => {
         const transporter = createTransporter()
         const dashboardUrl = `${process.env.BASE_URL || "http://localhost:3000"}/dashboard.html`;
         const mockCandidate = {
-            name: "ישראל ישראלי",
-            phone: "050-123-4567",
-            email: "test@example.com",
-            previousJob: "מפתח תוכנה Senior",
+            name: "דניאל כהן",
+            phone: "052-123-4567",
+            email: "daniel.cohen@example.com",
             experienceYears: "5",
-            requestedPositions: "Full Stack Developer, Backend Developer, Team Lead",
+            requestedPositions: "Full Stack Developer, Backend Developer",
             region: "מרכז",
         };
 
         const contentBody = `
-            <p style="color: #DDDDDD; font-size: 16px; line-height: 1.6;"><strong>🧪 אימייל בדיקה - מערכת הפצת קורות חיים</strong></p>
-            <p style="color: #DDDDDD; font-size: 16px; line-height: 1.6;">זהו אימייל בדיקה כדי לוודא שמערכת הפצת קורות החיים שלך פועלת כראוי.</p>
+            <p style="font-size: 16px; line-height: 1.6;">זהו אימייל בדיקה כדי לוודא שההגדרות לקבלת קורות חיים של מועמדים חדשים מוגדרות כראוי עבור הסוכנות שלך.</p>
+            <p style="font-size: 16px; line-height: 1.6;">להלן דוגמה לפרטי מועמד כפי שתקבלו:</p>
             <br>
-            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #2a2a2a; border-radius: 12px; padding: 20px; border: 1px solid #333333;">
-                <tr><td style="font-size: 18px; font-weight: 600; color: #FFFFFF; padding-bottom: 15px; font-family: 'Heebo', Arial, sans-serif;">פרופיל מועמד לדוגמה</td></tr>
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 20px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                <tr><td style="font-size: 18px; font-weight: 600; color: #ffffff; padding-bottom: 15px; font-family: 'Google Sans', 'Heebo', Arial, sans-serif;">פרופיל מועמד לדוגמה</td></tr>
                 <tr><td style="padding-top: 15px;">
                     <table border="0" cellpadding="5" cellspacing="0" width="100%">
-                        <tr><td style="color: #AAAAAA;">שם</td><td style="color: #FFFFFF; text-align: left;">${mockCandidate.name}</td></tr>
-                        <tr><td style="color: #AAAAAA;">טלפון</td><td style="color: #FFFFFF; text-align: left;">${mockCandidate.phone}</td></tr>
-                        <tr><td style="color: #AAAAAA;">אימייל</td><td style="color: #FFFFFF; text-align: left;">${mockCandidate.email}</td></tr>
-                        <tr><td style="color: #AAAAAA;">ניסיון</td><td style="color: #FFFFFF; text-align: left;">${mockCandidate.experienceYears} שנים</td></tr>
+                        <tr><td style="color: #c7c7cc;">שם</td><td style="color: #ffffff; text-align: left;">${mockCandidate.name}</td></tr>
+                        <tr><td style="color: #c7c7cc;">טלפון</td><td style="color: #ffffff; text-align: left;">${mockCandidate.phone}</td></tr>
+                        <tr><td style="color: #c7c7cc;">אימייל</td><td style="color: #ffffff; text-align: left;">${mockCandidate.email}</td></tr>
+                        <tr><td style="color: #c7c7cc;">ניסיון</td><td style="color: #ffffff; text-align: left;">${mockCandidate.experienceYears} שנים</td></tr>
                     </table>
                 </td></tr>
             </table>
             <br>
-            <p style="color: #DDDDDD; font-size: 16px; line-height: 1.6;">כאשר מועמדים אמיתיים יגישו את קורות החיים שלהם, תקבלו אימיילים דומים עם פרטיהם.</p>
+            <p style="font-size: 16px; line-height: 1.6;">כאשר מועמדים רלוונטיים יגישו את קורות החיים שלהם, תקבלו אימיילים דומים עם פרטיהם המלאים.</p>
         `;
 
         const html = createEmailTemplate(
-            "בדיקת מערכת הפצה",
-            "🧪 הודעת בדיקה",
+            "בדיקת מערכת הפצת קורות חיים",
+            "הודעת בדיקה",
             "שלום",
-            `צוות הגיוס של ${agencyInfo.companyName}`,
+            `צוות ${agencyInfo.companyName}`,
             contentBody,
-            "גישה ללוח המחוונים",
+            "חזרה ללוח הבקרה",
             dashboardUrl
         );
 
         const result = await transporter.sendMail({
             from: process.env.CVGO_EMAIL || "noreply@cvgo.pro",
             to: testEmail,
-            subject: "🧪 בדיקה - מערכת הפצת קורות חיים של CVGO",
+            subject: "בדיקת מערכת הפצת קורות חיים של CVGO",
             html: html,
             headers: {
                 "X-Priority": "3",

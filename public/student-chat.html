@@ -551,13 +551,18 @@
 </div>
 
 <!-- Completion Modal -->
-<div id="completionModal" class="fixed inset-0 bg-black bg-opacity-80 backdrop-blur-lg flex items-center justify-center z-50 hidden">
-    <div class="bg-gray-800 border border-gray-700 rounded-2xl shadow-2xl w-11/12 max-w-lg text-center p-8">
-        <h2 class="text-3xl font-bold text-white mb-4">מזל טוב, הפרופיל שלך הושלם!</h2>
-        <p class="text-gray-300 mb-8">רוצה להפיץ את קורות החיים שלך לחברות השמה?</p>
-        <div class="flex justify-center gap-4">
-            <a href="index.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-transform transform hover:scale-105">הפץ קו"ח</a>
-            <a href="index.html" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-transform transform hover:scale-105">חזור לדף הבית</a>
+<div id="completionModal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+    <div class="bg-gray-800 border border-gray-700 rounded-2xl shadow-2xl w-11/12 max-w-md mx-4 text-center p-8 transform transition-all" style="opacity: 0; transform: scale(0.95);">
+        <div class="w-16 h-16 bg-blue-600/20 border-2 border-blue-500/50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
+            </svg>
+        </div>
+        <h2 class="text-2xl font-bold text-white mb-2">מזל טוב, הפרופיל שלך הושלם!</h2>
+        <p class="text-gray-400 mb-8">רוצה להפיץ את קורות החיים שלך לחברות השמה?</p>
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <a href="index.html#upload-cv-section" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-transform transform hover:scale-105 w-full sm:w-auto">הפץ קו"ח</a>
+            <a href="index.html" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-transform transform hover:scale-105 w-full sm:w-auto">חזור לדף הבית</a>
         </div>
     </div>
 </div>
@@ -963,7 +968,7 @@
             this.renderTextInput("הדבק/י כאן לינקים (GitHub, Portfolio, וכו')", (value) => {
                 this.addMessage(value, true);
                 this.transitionTo('PROMPT_TERMS', { links: value });
-            }, this.temporaryData.links);
+            }, this.temporaryData.links, true); // Pass true to show skip button
         }
 
         render_PROMPT_TERMS() {
@@ -1001,10 +1006,16 @@
         render_FINAL_MESSAGE() {
             this.addMessage(this.MESSAGES.FINAL_MESSAGE, false);
             document.getElementById('inputArea').innerHTML = '';
-            // Show the completion modal
+
             const completionModal = document.getElementById('completionModal');
             if (completionModal) {
                 completionModal.classList.remove('hidden');
+                // Animate the modal entrance
+                setTimeout(() => {
+                    const modalContent = completionModal.querySelector('div');
+                    modalContent.style.opacity = '1';
+                    modalContent.style.transform = 'scale(1)';
+                }, 50);
             }
         }
 
@@ -1294,7 +1305,7 @@
             });
         }
 
-        renderTextInput(placeholder, callback, defaultValue = '') {
+        renderTextInput(placeholder, callback, defaultValue = '', showSkip = false) {
             const inputArea = document.getElementById('inputArea');
             const isTextarea = placeholder.includes('ספר/י') || placeholder.includes('כישורים') || placeholder.includes('פרויקט');
             const inputId = 'textInput';
@@ -1302,8 +1313,11 @@
                 `<textarea id="${inputId}" class="input-field w-full px-4 py-3 pr-12 min-h-[80px] resize-none" placeholder="${placeholder}">${defaultValue || ''}</textarea>` :
                 `<input type="text" id="${inputId}" class="input-field w-full px-4 py-3 pr-12" placeholder="${placeholder}" value="${defaultValue || ''}">`;
 
+            const skipButtonHTML = showSkip ? `<button class="option-button" id="skipBtn">דלג</button>` : '';
+
             inputArea.innerHTML = `
                 <div class="flex items-${isTextarea ? 'end' : 'center'} gap-3">
+                    ${skipButtonHTML}
                     <div class="flex-1">
                         ${inputTag}
                     </div>
@@ -1311,6 +1325,13 @@
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
                     </button>
                 </div>`;
+
+            if (showSkip) {
+                document.getElementById('skipBtn').addEventListener('click', () => {
+                    this.addMessage("דילוג", true);
+                    this.transitionTo('PROMPT_TERMS', { links: 'אין' });
+                });
+            }
 
             const input = document.getElementById(inputId);
             const sendBtn = document.getElementById('sendBtn');

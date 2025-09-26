@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>כניסה - CVGo</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="auth-style.css" />
+</head>
+
+<body>
+
+<!-- Header -->
+<header class="header_container__X86zB">
+    <div class="header_logo__AAPGq">
+        <a class="header_logoLink__HhzOO typo-flow-caption" aria-label="Home Page" href="/"><img alt="CVGo Logo" loading="eager" width="128" height="43" decoding="async" data-nimg="1" style="color:transparent" src="../services/public/google_logo5b6f.png" /></a>
+    </div>
+    <div class="header_navContainer__6afui">
+        <a href="/" class="button-link_link__eTf8F">חזרה לדף הבית</a>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="container">
+    <div class="auth-card">
+        <div class="form-content">
+            <div>
+                <h3>כניסה למערכת</h3>
+                <p>ברוכים השבים! היכנסו לחשבונכם</p>
+            </div>
+
+            <!-- Messages -->
+            <div id="errorMessage" class="form-alert" style="display: none;"></div>
+            <div id="lockWarning" class="form-alert" style="display: none;"></div>
+            <div id="successMessage" class="form-alert success" style="display: none;"></div>
+
+            <form id="loginForm" class="space-y-6">
+                <div>
+                    <label for="username">שם משתמש או אימייל</label>
+                    <input id="username" name="username" type="text" class="form-input" placeholder="your.email@example.com" required autocomplete="username">
+                </div>
+                <div>
+                    <label for="password">סיסמה</label>
+                    <input id="password" name="password" type="password" class="form-input" placeholder="••••••••" required autocomplete="current-password">
+                </div>
+                <div class="mt-8">
+                    <button type="submit" class="btn-primary" id="loginBtn">
+                        <span class="loading" id="loadingSpinner" style="display: none;"></span>
+                        <span id="loginText">התחברות</span>
+                    </button>
+                </div>
+            </form>
+            <div class="mt-6 text-center">
+                <p style="color: var(--text-secondary);">
+                    עדיין לא רשומים?
+                    <a href="register.html" class="form-link">הרשמה</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    const form = document.getElementById('loginForm');
+    const loginBtn = document.getElementById('loginBtn');
+    const loginText = document.getElementById('loginText');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    const errorMessage = document.getElementById('errorMessage');
+    const lockWarning = document.getElementById('lockWarning');
+    const successMessage = document.getElementById('successMessage');
+
+    // Function to show alerts
+    function showAlert(element, message) {
+        element.textContent = message;
+        element.style.display = 'flex';
+        // Hide after 5 seconds
+        setTimeout(() => {
+            element.style.display = 'none';
+        }, 5000);
+    }
+
+    function isTokenExpired() {
+        const token = localStorage.getItem('authToken');
+        if (!token) return true;
+        try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            return payload.exp * 1000 < Date.now();
+        } catch {
+            return true;
+        }
+    }
+
+    if (localStorage.getItem('authToken') && !isTokenExpired()) {
+        window.location.href = '/dashboard.html';
+    }
+
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        errorMessage.style.display = 'none';
+        lockWarning.style.display = 'none';
+        successMessage.style.display = 'none';
+
+        loginBtn.disabled = true;
+        loginText.style.display = 'none';
+        loadingSpinner.style.display = 'inline-block';
+
+        try {
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                localStorage.setItem('authToken', result.token);
+                localStorage.setItem('userData', JSON.stringify(result.user));
+
+                showAlert(successMessage, 'התחברות בוצעה בהצלחה! מעביר אותך למערכת...');
+
+                setTimeout(() => {
+                    window.location.href = '/dashboard.html';
+                }, 1500);
+
+            } else {
+                if (response.status === 423) {
+                    showAlert(lockWarning, 'החשבון נחסם זמנית עקב ניסיונות התחברות כושלים. נסה שוב בעוד 30 דקות.');
+                } else if (response.status === 403) {
+                    showAlert(errorMessage, 'החשבון עדיין ממתין לאישור מנהל המערכת.');
+                } else {
+                    showAlert(errorMessage, result.error || 'שגיאה בהתחברות');
+                }
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            showAlert(errorMessage, 'שגיאה בחיבור לשרת. אנא נסה שוב.');
+        } finally {
+            loginBtn.disabled = false;
+            loginText.style.display = 'inline';
+            loadingSpinner.style.display = 'none';
+        }
+    });
+</script>
+</body>
+</html>

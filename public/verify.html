@@ -1,0 +1,1063 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>אימות פרטים - CVGo</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.6.2/fuse.min.js"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link rel="stylesheet" href="auth-style.css" />
+    <style>
+        /* Styles specific to the verification page */
+        main.container {
+            justify-content: flex-start;
+        }
+
+        .verification-card {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(50px) saturate(200%);
+            -webkit-backdrop-filter: blur(50px) saturate(200%);
+            border: 0.5px solid rgba(255, 255, 255, 0.12);
+            border-radius: var(--radius-ios-xl);
+            padding: 40px;
+            width: 100%;
+            max-width: 800px;
+            box-shadow:
+                    0 25px 70px rgba(0, 0, 0, 0.7),
+                    0 1px 2px rgba(255, 255, 255, 0.08) inset,
+                    0 -1px 1px rgba(0, 0, 0, 0.1) inset;
+            position: relative;
+        }
+
+        .progress-container {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(50px) saturate(200%);
+            -webkit-backdrop-filter: blur(50px) saturate(200%);
+            border: 0.5px solid rgba(255, 255, 255, 0.12);
+            border-radius: var(--radius-ios-xl);
+            padding: 16px 24px;
+            margin-bottom: 32px;
+            box-shadow:
+                    0 20px 50px rgba(0, 0, 0, 0.6),
+                    0 1px 2px rgba(255, 255, 255, 0.1) inset;
+            display: inline-flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-tertiary);
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .step-item.active {
+            color: var(--text-white);
+        }
+
+        .step-item.completed {
+            color: var(--accent-green);
+        }
+
+        .step-number {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 12px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .step-item.active .step-number {
+            background: var(--accent-blue);
+            color: white;
+            border: 0.5px solid var(--accent-blue);
+            box-shadow:
+                    0 0 0 3px rgba(0, 122, 255, 0.2),
+                    0 4px 12px rgba(0, 122, 255, 0.4);
+        }
+
+        .step-item.completed .step-number {
+            background: var(--accent-green);
+            color: white;
+            border-color: var(--accent-green);
+        }
+
+        .step-connector {
+            width: 28px;
+            height: 1.5px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 1px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .step-item.completed + .step-connector {
+            background: var(--accent-green);
+        }
+    </style>
+</head>
+
+<body class="verify-page-body min-h-screen">
+<div class="loader-wrapper">
+    <span class="loader-letter">ט</span>
+    <span class="loader-letter">ו</span>
+    <span class="loader-letter">ע</span>
+    <span class="loader-letter">ן</span>
+    <span class="loader-letter">.</span>
+    <span class="loader-letter">.</span>
+    <span class="loader-letter">.</span>
+    <div class="loader"></div>
+</div>
+
+<!-- Header -->
+<header class="header_container__X86zB">
+    <div class="header_logo__AAPGq">
+        <a class="header_logoLink__HhzOO typo-flow-caption" aria-label="Home Page" href="/"><img alt="CVGo Logo" loading="eager" width="128" height="43" decoding="async" data-nimg="1" style="color:transparent" src="../services/public/google_logo5b6f.png" /></a>
+    </div>
+    <div class="header_navContainer__6afui">
+        <a href="/" class="button-link_link__eTf8F">חזרה לדף הבית</a>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h2>אימות פרטים</h2>
+        <p>חילצנו את המידע הזה מקורות החיים שלך. אנא אמת את הפרטים והשלם את החסר כדי להמשיך.</p>
+    </div>
+
+    <!-- Progress Steps -->
+    <div class="progress-container">
+        <div class="step-item active" id="step1">
+            <div class="step-number">1</div>
+            <span>פרטים בסיסיים</span>
+        </div>
+        <div class="step-connector" id="connector1"></div>
+        <div class="step-item" id="step2">
+            <div class="step-number">2</div>
+            <span>בחירת משרות</span>
+        </div>
+        <div class="step-connector" id="connector2"></div>
+        <div class="step-item" id="step3">
+            <div class="step-number">3</div>
+            <span>סיכום ושליחה</span>
+        </div>
+    </div>
+
+    <!-- Verification Form -->
+    <div class="verification-card">
+        <p id="form-alert" class="form-alert" style="display: none;">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+            </svg>
+            <span id="alert-text"></span>
+        </p>
+
+        <!-- Step 1: Basic Information -->
+        <div id="stepContent1" class="step-content">
+            <div class="mb-8">
+                <h3>פרטים בסיסיים</h3>
+                <p>אנא אמת את פרטי הקשר שלך שחולצו מקורות החיים.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label>שם מלא *</label>
+                    <input id="fullName" type="text" class="form-input" placeholder="הכנס שם מלא" required>
+                </div>
+
+                <div>
+                    <label>כתובת אימייל *</label>
+                    <input id="email" type="email" class="form-input" placeholder="your.email@example.com" required>
+                </div>
+
+                <div>
+                    <label>מספר טלפון</label>
+                    <input id="phone" type="tel" class="form-input" placeholder="050-123-4567">
+                </div>
+
+                <div>
+                    <label>אזור מגורים *</label>
+                    <select id="location" class="form-input" required>
+                        <option value="">בחר אזור</option>
+                        <option value="north">צפון (צפונית לחדרה)</option>
+                        <option value="center">מרכז (הרצליה עד ראשון לציון)</option>
+                        <option value="lowlands">שפלה (ראשון לציון עד אשקלון)</option>
+                        <option value="south">דרום (דרומית לאשקלון)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex justify-start mt-8">
+                <button id="continueBtn1" class="btn-primary">
+                    המשך לבחירת משרות ←
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 2: Job Positions -->
+        <div id="stepContent2" class="step-content hidden">
+            <div class="mb-8">
+                <h3>בחירת משרות</h3>
+                <p>בחר עד 4 משרות שהכי מתאימות לניסיון ולתחומי העניין שלך.</p>
+            </div>
+
+            <div class="mb-6">
+                <label>חיפוש משרה:</label>
+                <div class="position-search-container">
+                    <input id="positionSearch" type="text" class="form-input" placeholder="הקלד שם משרה...">
+                    <button id="clearSearch" class="absolute right-3 top-1/2 transform -translate-y-1/2 hidden" style="color: var(--text-tertiary); background: none; border: none; cursor: pointer; z-index: 10;">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+
+                    <!-- Search Results Dropdown -->
+                    <div id="searchResults" class="search-dropdown hidden">
+                        <div id="searchResultsContainer"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="relatedPositions" class="mb-6 hidden">
+                <p class="text-sm font-medium mb-3">משרות קשורות:</p>
+                <div id="relatedPositionsContainer" class="flex flex-wrap gap-3"></div>
+            </div>
+
+            <div class="mb-6">
+                <div class="flex items-center justify-between mb-3">
+                    <p class="text-sm font-medium">משרות שנבחרו:</p>
+                    <span id="selectedCount" class="text-sm" style="color: var(--text-secondary)">0/4 נבחרו</span>
+                </div>
+                <div id="selectedPositions" class="min-h-[60px] p-4 border-2 border-dashed border-gray-200 rounded-xl flex flex-wrap gap-2 items-center justify-center">
+                    <p class="text-gray-400 text-sm">בחר משרות מהרשימה למעלה</p>
+                </div>
+            </div>
+
+            <div class="flex justify-between mt-8">
+                <button id="backBtn1" class="btn-secondary">
+                    → חזור
+                </button>
+                <button id="reviewBtn" class="btn-primary opacity-50 cursor-not-allowed" disabled>
+                    המשך לסיכום ←
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 3: Review & Submit -->
+        <div id="stepContent3" class="step-content hidden">
+            <div class="mb-8">
+                <h3>סיכום ושליחה</h3>
+                <p>נא לעבור על המידע שלך לפני השליחה למאגר הנתונים שלנו.</p>
+            </div>
+
+            <div class="bg-gray-50 rounded-xl p-6 mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4>פרטים אישיים</h4>
+                        <div class="space-y-2">
+                            <p><span class="text-gray-500">שם:</span> <span id="reviewName" class="font-medium"></span></p>
+                            <p><span class="text-gray-500">אימייל:</span> <span id="reviewEmail" class="font-medium"></span></p>
+                            <p><span class="text-gray-500">טלפון:</span> <span id="reviewPhone" class="font-medium"></span></p>
+                            <p><span class="text-gray-500">אזור:</span> <span id="reviewLocation" class="font-medium"></span></p>
+                        </div>
+                    </div>
+                    <div>
+                        <h4>משרות שנבחרו</h4>
+                        <div id="reviewPositions" class="space-y-2"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <label class="flex items-center cursor-pointer">
+                    <input id="agreeTerms" type="checkbox" class="w-5 h-5 text-blue-600 border-2 border-gray-300 rounded focus:ring-2 focus:ring-blue-500">
+                    <span class="text-sm mr-3">
+                        אני מסכים ל<a href="/privacy-policy.html" target="_blank" class="text-white hover:text-gray-300 hover:underline opacity-70">מדיניות הפרטיות</a> ול<a href="/terms-of-use.html" target="_blank" class="text-white hover:text-gray-300 hover:underline opacity-70">תנאי השימוש</a>
+                    </span>
+                </label>
+            </div>
+
+            <div class="flex justify-between mt-8">
+                <button id="backBtn2" class="btn-secondary">
+                    → חזור
+                </button>
+                <button id="submitBtn" class="btn-primary opacity-50 cursor-not-allowed" disabled>
+                    שלח פנייה
+                </button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Success Modal -->
+<div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-2xl p-8 max-w-md mx-4 success-animation">
+        <div class="text-center">
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <h3 class="text-2xl font-bold mb-2">הפנייה נשלחה בהצלחה!</h3>
+            <p class="mb-6">המידע שלך נוסף למאגר הכשרונות שלנו. ניצור איתך קשר כאשר יצוצו הזדמנויות רלוונטיות.</p>
+            <button id="goHomeBtn" class="btn-primary w-full">
+                חזרה לדף הבית
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentStep = 1;
+    let selectedPositions = [];
+    let cvData = {};
+    let fuse;
+
+    const allPositions = [
+        // Administration
+        {title: "Graphics", category: "Administration", related: ["Design", "Web Designer"]},
+        {title: "Bookkeeping", category: "Administration", related: ["Payroll Accountant", "Certified Public Accountant"]},
+        {title: "Payroll Accountant", category: "Administration", related: ["Bookkeeping", "Economics"]},
+        {title: "Import and Export", category: "Administration", related: ["International Sales and Marketing", "Logistics"]},
+        {title: "Call Center", category: "Administration", related: ["Customer Service", "Phone Support"]},
+        {title: "Secretary", category: "Administration", related: ["Senior Secretary", "Office Management"]},
+        {title: "Senior Secretary", category: "Administration", related: ["Secretary", "Administration Management"]},
+        {title: "Administration Management", category: "Administration", related: ["Office Management", "Senior Secretary"]},
+        {title: "Office Management", category: "Administration", related: ["Administration Management", "Clerical Work"]},
+        {title: "Clerical Work", category: "Administration", related: ["Typing", "Office Management"]},
+        {title: "Typing", category: "Administration", related: ["Clerical Work", "Secretary"]},
+        {title: "Purchasing", category: "Administration", related: ["Import and Export", "Warehouse/Logistics"]},
+        {title: "Customer Service", category: "Administration", related: ["Call Center", "Phone Support"]},
+
+        // Electronics
+        {title: "Electro-optics", category: "Electronics", related: ["Electronics Technician", "Electronics Engineer"]},
+        {title: "Electronics Course Graduate or Experienced", category: "Electronics", related: ["Electronics Technician", "Electronics Engineer"]},
+        {title: "Electronics Technician", category: "Electronics", related: ["Electronics Engineer", "Electronics Course Graduate or Experienced"]},
+        {title: "Electronics Engineer", category: "Electronics", related: ["Electronics Technician", "System Engineer - Hardware"]},
+        {title: "System Engineer - Hardware", category: "Electronics", related: ["Electronics Engineer", "Hardware Engineer"]},
+        {title: "Hardware Engineer", category: "Electronics", related: ["System Engineer - Hardware", "Team Lead - Hardware"]},
+
+        // Computers
+        {title: "AI / ML", category: "Computers", related: ["Data Engineer/Scientist", "Big Data / BI / OLAP"]},
+        {title: "Big Data / BI / OLAP", category: "Computers", related: ["Data Engineer/Scientist", "AI / ML"]},
+        {title: "Data Engineer/Scientist", category: "Computers", related: ["AI / ML", "Big Data / BI / OLAP"]},
+        {title: "DBA", category: "Computers", related: ["System Administrator", "Information Systems"]},
+        {title: "DevOps", category: "Computers", related: ["System Administrator", "System Engineer - Software"]},
+        {title: "Help Desk", category: "Computers", related: ["PC Technician", "Phone Support"]},
+        {title: "PC Technician", category: "Computers", related: ["Help Desk", "Support Engineer"]},
+        {title: "QA / Quality Assurance", category: "Computers", related: ["Quality Control", "Software Developer"]},
+        {title: "System Administrator", category: "Computers", related: ["DevOps", "DBA"]},
+        {title: "Web Master", category: "Computers", related: ["Web Designer", "Software Developer"]},
+        {title: "Information Security", category: "Computers", related: ["System Administrator", "Computer Networking"]},
+        {title: "Algorithm Engineer", category: "Computers", related: ["Software Engineer", "AI / ML"]},
+        {title: "Computer Science Graduate/Certified", category: "Computers", related: ["Computer Technician", "Software Developer"]},
+        {title: "Computer Technician", category: "Computers", related: ["Software Engineer", "Computer Science Graduate/Certified"]},
+        {title: "Telephony", category: "Computers", related: ["Computer Networking", "Call Center"]},
+        {title: "Technical Writer", category: "Computers", related: ["Information Systems", "Systems Analysis"]},
+        {title: "Software Engineer", category: "Computers", related: ["Software Developer", "Senior Software Developer"]},
+        {title: "System Engineer - Software", category: "Computers", related: ["Software Engineer", "DevOps"]},
+        {title: "Support Engineer", category: "Computers", related: ["Help Desk", "PC Technician"]},
+        {title: "Project Manager", category: "Computers", related: ["Team Lead - Software", "Project Manager"]},
+        {title: "Web Designer", category: "Computers", related: ["Web Master", "Design"]},
+        {title: "Information Systems", category: "Computers", related: ["Systems Analysis", "DBA"]},
+        {title: "Software Developer", category: "Computers", related: ["Software Engineer", "Senior Software Developer"]},
+        {title: "Senior Software Developer", category: "Computers", related: ["Software Developer", "Team Lead - Software"]},
+        {title: "Systems Analysis", category: "Computers", related: ["Information Systems", "Technical Writer"]},
+        {title: "Mobile Development - Android / iOS", category: "Computers", related: ["Software Developer", "Web Designer"]},
+        {title: "Team Lead - Hardware", category: "Computers", related: ["Hardware Engineer", "Team Lead - Software"]},
+        {title: "Team Lead - Software", category: "Computers", related: ["Senior Software Developer", "Project Manager"]},
+        {title: "Computer Networking", category: "Computers", related: ["System Administrator", "Information Security"]},
+
+        // Additional categories
+        {title: "Senior Manager", category: "Senior Management", related: ["CEO", "VP"]},
+        {title: "Marketing", category: "Sales/Marketing/Communications", related: ["Sales", "Advertising, Public Relations, and Communications"]},
+        {title: "Teaching/Training/Education", category: "Liberal/Academic Professions", related: ["Special Education", "Psychology"]},
+        {title: "Nurses/Caregivers/Nursing", category: "General Professions", related: ["Medicine", "Social Work"]},
+    ];
+
+    // Initialize Fuse search
+    function initializeFuse() {
+        fuse = new Fuse(allPositions, {
+            keys: ['title'],
+            threshold: 0.3,
+            includeScore: true
+        });
+    }
+
+    // Show custom alert
+    function showCustomAlert(message, type = 'error') {
+        const alertElement = document.getElementById('form-alert');
+        const alertText = document.getElementById('alert-text');
+
+        alertText.textContent = message;
+        alertElement.className = type === 'error' ? 'form-alert' : 'form-alert success';
+        alertElement.style.display = 'flex';
+
+        // Auto hide after 5 seconds
+        setTimeout(() => {
+            alertElement.style.display = 'none';
+        }, 5000);
+    }
+
+    // Clear field error styling
+    function clearFieldError(fieldId) {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.classList.remove('error');
+        }
+    }
+
+    // Add field error styling
+    function addFieldError(fieldId) {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.classList.add('error');
+            field.focus();
+        }
+    }
+
+    // Validation functions
+    function validateStep1() {
+        let isValid = true;
+        const errors = [];
+
+        const name = document.getElementById('fullName').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const location = document.getElementById('location').value;
+
+        // Clear previous errors
+        clearFieldError('fullName');
+        clearFieldError('email');
+        clearFieldError('location');
+
+        if (!name) {
+            addFieldError('fullName');
+            errors.push('שם מלא הוא שדה חובה');
+            isValid = false;
+        }
+
+        if (!email) {
+            addFieldError('email');
+            errors.push('כתובת אימייל היא שדה חובה');
+            isValid = false;
+        } else if (!isValidEmail(email)) {
+            addFieldError('email');
+            errors.push('כתובת אימייל לא תקינה');
+            isValid = false;
+        }
+
+        if (!location) {
+            addFieldError('location');
+            errors.push('אזור מגורים הוא שדה חובה');
+            isValid = false;
+        }
+
+        if (!isValid) {
+            showCustomAlert(errors.join(', '), 'error');
+        }
+
+        return isValid;
+    }
+
+    // Event listeners setup
+    function setupEventListeners() {
+        // Check if elements exist before adding listeners
+        const continueBtn1 = document.getElementById('continueBtn1');
+        const backBtn1 = document.getElementById('backBtn1');
+        const reviewBtn = document.getElementById('reviewBtn');
+        const backBtn2 = document.getElementById('backBtn2');
+        const submitBtn = document.getElementById('submitBtn');
+        const goHomeBtn = document.getElementById('goHomeBtn');
+        const positionSearch = document.getElementById('positionSearch');
+        const clearSearch = document.getElementById('clearSearch');
+        const agreeTerms = document.getElementById('agreeTerms');
+
+        // Navigation buttons
+        if (continueBtn1) continueBtn1.addEventListener('click', () => nextStep(1));
+        if (backBtn1) backBtn1.addEventListener('click', () => prevStep(2));
+        if (reviewBtn) reviewBtn.addEventListener('click', () => nextStep(2));
+        if (backBtn2) backBtn2.addEventListener('click', () => prevStep(3));
+        if (submitBtn) submitBtn.addEventListener('click', submitForm);
+
+        // Modal buttons
+        if (goHomeBtn) goHomeBtn.addEventListener('click', goHome);
+
+        // Search functionality
+        if (positionSearch) {
+            positionSearch.addEventListener('input', searchPositions);
+            positionSearch.addEventListener('focus', () => {
+                if (positionSearch.value.length >= 2) {
+                    searchPositions();
+                }
+            });
+        }
+        if (clearSearch) clearSearch.addEventListener('click', clearSearchInput);
+
+        // Form validation
+        if (agreeTerms) agreeTerms.addEventListener('change', toggleSubmitButton);
+
+        // Input formatting and validation
+        setupInputFormatting();
+
+        // Click outside to close search results
+        document.addEventListener('click', handleOutsideClick);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', handleKeyNavigation);
+    }
+
+    function setupInputFormatting() {
+        const fullName = document.getElementById('fullName');
+        const phone = document.getElementById('phone');
+        const email = document.getElementById('email');
+        const location = document.getElementById('location');
+
+        // Name validation
+        if (fullName) {
+            fullName.addEventListener('input', function() {
+                this.value = this.value.replace(/[^a-zA-Z\u0590-\u05FF\s\-\.\']/g, '');
+                clearFieldError('fullName');
+                saveFormData();
+            });
+        }
+
+        // Phone formatting
+        if (phone) {
+            phone.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+
+                if (value.startsWith('972')) {
+                    value = value.substring(3);
+                }
+                if (value.startsWith('0')) {
+                    value = value.substring(1);
+                }
+
+                if (value.length >= 9) {
+                    if (value.startsWith('5')) {
+                        e.target.value = '05' + value.substring(1, 2) + '-' + value.substring(2, 5) + '-' + value.substring(5, 9);
+                    } else {
+                        e.target.value = '0' + value.substring(0, 1) + '-' + value.substring(1, 4) + '-' + value.substring(4, 8);
+                    }
+                } else {
+                    e.target.value = value;
+                }
+                saveFormData();
+            });
+        }
+
+        // Email validation
+        if (email) {
+            email.addEventListener('input', function() {
+                clearFieldError('email');
+                saveFormData();
+            });
+
+            email.addEventListener('blur', function() {
+                const emailValue = this.value.trim();
+                if (emailValue && !isValidEmail(emailValue)) {
+                    addFieldError('email');
+                }
+            });
+        }
+
+        if (location) {
+            location.addEventListener('change', function() {
+                clearFieldError('location');
+                saveFormData();
+            });
+        }
+    }
+
+    function handleOutsideClick(e) {
+        const searchInput = document.getElementById('positionSearch');
+        const searchResults = document.getElementById('searchResults');
+
+        if (searchInput && searchResults) {
+            if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                searchResults.classList.add('hidden');
+            }
+        }
+    }
+
+    function handleKeyNavigation(event) {
+        if (event.key === 'Enter') {
+            if (currentStep === 1 && validateStep1()) {
+                nextStep(1);
+            } else if (currentStep === 2 && selectedPositions.length > 0) {
+                nextStep(2);
+            } else if (currentStep === 3) {
+                const agreeTerms = document.getElementById('agreeTerms');
+                if (agreeTerms && agreeTerms.checked) {
+                    submitForm();
+                }
+            }
+        }
+    }
+
+    function searchPositions() {
+        const query = document.getElementById('positionSearch').value;
+        const resultsContainer = document.getElementById('searchResults');
+        const clearBtn = document.getElementById('clearSearch');
+
+        if (!resultsContainer || !clearBtn) return;
+
+        if (query.length > 0) {
+            clearBtn.classList.remove('hidden');
+        } else {
+            clearBtn.classList.add('hidden');
+        }
+
+        if (query.length < 2) {
+            resultsContainer.classList.add('hidden');
+            return;
+        }
+
+        const results = fuse.search(query);
+        displaySearchResults(results);
+    }
+
+    function clearSearchInput() {
+        const searchInput = document.getElementById('positionSearch');
+        const searchResults = document.getElementById('searchResults');
+        const clearBtn = document.getElementById('clearSearch');
+
+        if (searchInput) searchInput.value = '';
+        if (searchResults) searchResults.classList.add('hidden');
+        if (clearBtn) clearBtn.classList.add('hidden');
+    }
+
+    function displaySearchResults(results) {
+        const container = document.getElementById('searchResultsContainer');
+        const resultsDiv = document.getElementById('searchResults');
+
+        if (!container || !resultsDiv) return;
+
+        container.innerHTML = results.slice(0, 5).map(result => {
+            return `<div class="search-result-item" data-title="${result.item.title}" data-category="${result.item.category}" data-related='${JSON.stringify(result.item.related)}'>
+                ${result.item.title}
+                <span class="search-result-category">(${result.item.category})</span>
+            </div>`;
+        }).join('');
+
+        // Add click listeners to search results
+        container.querySelectorAll('.search-result-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const title = this.getAttribute('data-title');
+                const category = this.getAttribute('data-category');
+                const related = JSON.parse(this.getAttribute('data-related'));
+                selectPosition(title, category, related);
+            });
+        });
+
+        resultsDiv.classList.remove('hidden');
+    }
+
+    function selectPosition(title, category, related) {
+        if (selectedPositions.length >= 4) {
+            showCustomAlert('ניתן לבחור מקסימום 4 משרות.');
+            const searchResults = document.getElementById('searchResults');
+            const searchInput = document.getElementById('positionSearch');
+            if (searchResults) searchResults.classList.add('hidden');
+            if (searchInput) searchInput.value = '';
+            return;
+        }
+
+        if (!selectedPositions.find(p => p.title === title)) {
+            selectedPositions.push({title, category});
+            updateSelectedPositions();
+            showRelatedPositions(related);
+
+            const searchResults = document.getElementById('searchResults');
+            const searchInput = document.getElementById('positionSearch');
+            if (searchResults) searchResults.classList.add('hidden');
+            if (searchInput) searchInput.value = '';
+
+            saveFormData();
+        }
+    }
+
+    function showRelatedPositions(related) {
+        const container = document.getElementById('relatedPositionsContainer');
+        const relatedDiv = document.getElementById('relatedPositions');
+
+        if (!container || !relatedDiv) return;
+
+        container.innerHTML = related.map(pos =>
+            `<div class="related-position" data-position="${pos}">
+                <span style="color: var(--accent-green);">💡</span> ${pos}
+            </div>`
+        ).join('');
+
+        // Add click listeners to related positions
+        container.querySelectorAll('.related-position').forEach(item => {
+            item.addEventListener('click', function() {
+                const positionTitle = this.getAttribute('data-position');
+                selectFromRelated(positionTitle);
+            });
+        });
+
+        relatedDiv.classList.remove('hidden');
+    }
+
+    function selectFromRelated(positionTitle) {
+        const position = allPositions.find(p => p.title === positionTitle);
+        if (position) {
+            selectPosition(position.title, position.category, position.related);
+        }
+    }
+
+    function updateSelectedPositions() {
+        const container = document.getElementById('selectedPositions');
+        const countElement = document.getElementById('selectedCount');
+        const reviewBtn = document.getElementById('reviewBtn');
+
+        if (!container || !countElement || !reviewBtn) return;
+
+        countElement.textContent = `${selectedPositions.length}/4 נבחרו`;
+
+        if (selectedPositions.length === 0) {
+            container.innerHTML = '<p class="text-gray-400 text-sm">בחר משרות מהרשימה למעלה</p>';
+            reviewBtn.disabled = true;
+            reviewBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        } else {
+            container.innerHTML = selectedPositions.map(pos => `
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                    ${pos.title}
+                    <button class="remove-position ml-2 text-blue-600 hover:text-blue-800" data-title="${pos.title}">×</button>
+                </span>
+            `).join('');
+
+            // Add click listeners to remove buttons
+            container.querySelectorAll('.remove-position').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const title = this.getAttribute('data-title');
+                    removePosition(title);
+                });
+            });
+
+            reviewBtn.disabled = false;
+            reviewBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+    }
+
+    function removePosition(positionTitle) {
+        selectedPositions = selectedPositions.filter(p => p.title !== positionTitle);
+        updateSelectedPositions();
+        saveFormData();
+    }
+
+    function nextStep(step) {
+        if (step === 1) {
+            if (!validateStep1()) {
+                return;
+            }
+
+            // Move to step 2
+            document.getElementById('stepContent1').classList.add('hidden');
+            document.getElementById('stepContent2').classList.remove('hidden');
+
+            document.getElementById('step1').classList.remove('active');
+            document.getElementById('step1').classList.add('completed');
+            document.getElementById('step2').classList.add('active');
+
+            currentStep = 2;
+        }
+
+        if (step === 2) {
+            if (selectedPositions.length === 0) {
+                showCustomAlert('יש לבחור לפחות משרה אחת.');
+                return;
+            }
+
+            // Move to step 3
+            document.getElementById('stepContent2').classList.add('hidden');
+            document.getElementById('stepContent3').classList.remove('hidden');
+
+            document.getElementById('step2').classList.remove('active');
+            document.getElementById('step2').classList.add('completed');
+            document.getElementById('step3').classList.add('active');
+
+            updateReview();
+            currentStep = 3;
+        }
+    }
+
+    function prevStep(step) {
+        if (step === 2) {
+            document.getElementById('stepContent2').classList.add('hidden');
+            document.getElementById('stepContent1').classList.remove('hidden');
+
+            document.getElementById('step2').classList.remove('active');
+            document.getElementById('step1').classList.remove('completed');
+            document.getElementById('step1').classList.add('active');
+
+            currentStep = 1;
+        }
+
+        if (step === 3) {
+            document.getElementById('stepContent3').classList.add('hidden');
+            document.getElementById('stepContent2').classList.remove('hidden');
+
+            document.getElementById('step3').classList.remove('active');
+            document.getElementById('step2').classList.remove('completed');
+            document.getElementById('step2').classList.add('active');
+
+            currentStep = 2;
+        }
+    }
+
+    function updateReview() {
+        const nameEl = document.getElementById('reviewName');
+        const emailEl = document.getElementById('reviewEmail');
+        const phoneEl = document.getElementById('reviewPhone');
+        const locationEl = document.getElementById('reviewLocation');
+        const positionsEl = document.getElementById('reviewPositions');
+
+        if (nameEl) nameEl.textContent = document.getElementById('fullName').value;
+        if (emailEl) emailEl.textContent = document.getElementById('email').value;
+        if (phoneEl) phoneEl.textContent = document.getElementById('phone').value || 'לא סופק';
+
+        const locationSelect = document.getElementById('location');
+        if (locationEl && locationSelect) {
+            const locationText = locationSelect.options[locationSelect.selectedIndex].text;
+            locationEl.textContent = locationText || 'לא צוין';
+        }
+
+        if (positionsEl) {
+            positionsEl.innerHTML = selectedPositions.map(pos => `
+                <p>• ${pos.title} <span class="text-sm text-gray-500">(${pos.category})</span></p>
+            `).join('');
+        }
+    }
+
+    function toggleSubmitButton() {
+        const agreeTerms = document.getElementById('agreeTerms');
+        const submitBtn = document.getElementById('submitBtn');
+
+        if (agreeTerms && submitBtn) {
+            if (agreeTerms.checked) {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+        }
+    }
+
+    function isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    async function submitForm() {
+        const loader = document.getElementById('loader');
+        const submitBtn = document.getElementById('submitBtn');
+
+        if (!submitBtn || !loader) return;
+
+        try {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'שולח...';
+            loader.classList.remove('hidden');
+
+            const formData = {
+                name: document.getElementById('fullName').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                phone: document.getElementById('phone').value.trim() || '',
+                location: document.getElementById('location').value,
+                positions: selectedPositions,
+                metadata: cvData.metadata || {},
+                source: 'verification_form'
+            };
+
+            console.log('Submitting form data:', formData);
+
+            const response = await fetch('/api/candidates/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-API-Key': 'your-api-key-here'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.error || 'Submission failed');
+            }
+
+            // Clear session data
+            clearSavedData();
+
+            // Hide loader and show success modal
+            loader.classList.add('hidden');
+            submitBtn.textContent = 'שלח פנייה';
+            document.getElementById('successModal').classList.remove('hidden');
+
+        } catch (error) {
+            console.error('Submit error:', error);
+            loader.classList.add('hidden');
+
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'שלח פנייה';
+
+            showCustomAlert(
+                error.message || 'אירעה שגיאה בשליחת הפנייה. אנא נסה שוב.',
+                'error'
+            );
+
+            // Re-enable submit button if terms are agreed
+            const agreeTerms = document.getElementById('agreeTerms');
+            if (agreeTerms && agreeTerms.checked) {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        }
+    }
+
+    function goHome() {
+        window.location.href = '/';
+    }
+
+    function saveFormData() {
+        const formData = {
+            name: document.getElementById('fullName')?.value || '',
+            email: document.getElementById('email')?.value || '',
+            phone: document.getElementById('phone')?.value || '',
+            location: document.getElementById('location')?.value || '',
+            selectedPositions: selectedPositions,
+            currentStep: currentStep
+        };
+        sessionStorage.setItem('formData', JSON.stringify(formData));
+    }
+
+    function loadFormData() {
+        const storedFormData = sessionStorage.getItem('formData');
+        if (storedFormData) {
+            try {
+                const formData = JSON.parse(storedFormData);
+
+                const fullName = document.getElementById('fullName');
+                const email = document.getElementById('email');
+                const phone = document.getElementById('phone');
+                const location = document.getElementById('location');
+
+                if (formData.name && fullName) fullName.value = formData.name;
+                if (formData.email && email) email.value = formData.email;
+                if (formData.phone && phone) phone.value = formData.phone;
+                if (formData.location && location) location.value = formData.location;
+
+                if (formData.selectedPositions && Array.isArray(formData.selectedPositions)) {
+                    selectedPositions = formData.selectedPositions;
+                    updateSelectedPositions();
+                }
+            } catch (e) {
+                console.error('Error loading form data:', e);
+            }
+        }
+    }
+
+    function clearSavedData() {
+        sessionStorage.removeItem('formData');
+        sessionStorage.removeItem('cvData');
+    }
+
+    function populateFormData() {
+        console.log('Available cvData:', cvData);
+
+        if (!cvData) {
+            console.warn('No CV data found');
+            return;
+        }
+
+        // Handle both direct data and nested data structure
+        const data = cvData.data || cvData;
+
+        // Populate fields with extracted data
+        const fullName = document.getElementById('fullName');
+        const email = document.getElementById('email');
+        const phone = document.getElementById('phone');
+
+        if (data.name && data.name.trim() && fullName) {
+            fullName.value = data.name.trim();
+            console.log('Populated name:', data.name);
+        }
+
+        if (data.email && data.email.trim() && email) {
+            email.value = data.email.trim().toLowerCase();
+            console.log('Populated email:', data.email);
+        }
+
+        if (data.phone && data.phone.trim() && phone) {
+            phone.value = data.phone.trim();
+            console.log('Populated phone:', data.phone);
+        }
+    }
+
+    // Initialize everything when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM loaded, initializing verification form...');
+
+        // Initialize Fuse search
+        initializeFuse();
+
+        // Load CV data from session storage FIRST
+        const storedData = sessionStorage.getItem('cvData');
+        console.log('Raw stored data:', storedData);
+
+        if (storedData) {
+            try {
+                cvData = JSON.parse(storedData);
+                console.log('Parsed CV data:', cvData);
+            } catch (e) {
+                console.error('Error parsing stored CV data:', e);
+                cvData = {};
+            }
+        } else {
+            console.warn('No CV data found in session storage');
+            cvData = {};
+        }
+
+        // Setup event listeners
+        setupEventListeners();
+
+        // THEN populate form data
+        setTimeout(() => {
+            populateFormData();
+            // Load any previously saved form data (this will override CV data if form was partially filled)
+            loadFormData();
+        }, 100);
+
+        console.log('Verification form initialized successfully');
+    });
+
+    // Handle browser back button
+    window.addEventListener('popstate', function(event) {
+        if (currentStep > 1) {
+            event.preventDefault();
+            if (currentStep === 2) {
+                prevStep(2);
+            } else if (currentStep === 3) {
+                prevStep(3);
+            }
+        }
+    });
+</script>
+</body>
+</html>

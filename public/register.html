@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>הרשמה - CVGo</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="auth-style.css" />
+    <style>
+        body {
+            overflow: hidden !important; /* Hide scrollbars for the two-column layout */
+        }
+        main.container {
+            max-width: 1200px; /* Wider container for two columns */
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+        .auth-card {
+            display: flex;
+            flex-direction: row;
+            max-width: 1100px; /* Wider card */
+            width: 100%;
+            padding: 0;
+            overflow: hidden;
+            height: 85vh;
+            max-height: 800px;
+        }
+        .form-column {
+            flex: 1.2; /* Give more space to the form */
+            padding: 40px;
+            overflow-y: auto;
+            direction: ltr; /* Forces scrollbar to the right */
+        }
+        .form-column > div {
+            direction: rtl; /* Reset direction for the content */
+        }
+        .svg-column {
+            flex: 0.8;
+            background: rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .form-content > div:first-child {
+            margin-bottom: 24px;
+        }
+        .space-y-4 > * + * {
+            margin-top: 1rem;
+        }
+        /* Custom Scrollbar */
+        .form-column::-webkit-scrollbar {
+            width: 8px;
+        }
+        .form-column::-webkit-scrollbar-track {
+            background: var(--glass-bg);
+        }
+        .form-column::-webkit-scrollbar-thumb {
+            background-color: var(--accent-blue);
+            border-radius: 8px;
+            border: 2px solid transparent;
+            background-clip: content-box;
+        }
+        .form-column::-webkit-scrollbar-thumb:hover {
+            background-color: #0056CC;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Header -->
+<header class="header_container__X86zB">
+    <div class="header_logo__AAPGq">
+        <a class="header_logoLink__HhzOO typo-flow-caption" aria-label="Home Page" href="/"><img alt="CVGo Logo" loading="eager" width="128" height="43" decoding="async" data-nimg="1" style="color:transparent" src="../services/public/google_logo5b6f.png" /></a>
+    </div>
+    <div class="header_navContainer__6afui">
+        <a href="/" class="button-link_link__eTf8F">חזרה לדף הבית</a>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="container">
+    <div class="auth-card">
+        <div class="form-column">
+            <div class="form-content">
+                <div>
+                    <h3>הרשמה למערכת</h3>
+                    <p>הצטרפו אלינו והתחילו למצוא את הכישרונות הטובים ביותר</p>
+                </div>
+
+                <div id="form-alert" class="form-alert" style="display: none;"></div>
+
+                <form id="registrationForm">
+                    <div class="space-y-6">
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="companyName">שם החברה</label>
+                                <input id="companyName" name="companyName" type="text" class="form-input" required>
+                            </div>
+                            <div>
+                                <label for="fullName">שמכם המלא</label>
+                                <input id="fullName" name="fullName" type="text" class="form-input" required>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="website">אתר החברה</label>
+                            <input id="website" name="website" type="text" class="form-input" required>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="email">כתובת אימייל</label>
+                                <input id="email" name="email" type="email" class="form-input" required>
+                            </div>
+                            <div>
+                                <label for="phone">מספר טלפון</label>
+                                <input id="phone" name="phone" type="tel" class="form-input" required>
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="city">עיר</label>
+                                <input id="city" name="city" type="text" class="form-input" required>
+                            </div>
+                            <div>
+                                <label for="address">כתובת מלאה</label>
+                                <input id="address" name="address" type="text" class="form-input" required>
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="username">שם משתמש</label>
+                                <input id="username" name="username" type="text" class="form-input" required>
+                            </div>
+                            <div>
+                                <label for="password">סיסמה (8+ תווים)</label>
+                                <input id="password" name="password" type="password" class="form-input" required>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="isRecruitmentAgency" value="true">
+                                <span class="checkmark"></span>
+                                <span>האם אתם חברת גיוס?</span>
+                            </label>
+                            <div class="flex items-center gap-4">
+                                <label>איזורי פעילות:</label>
+                                <div class="flex flex-wrap gap-4">
+                                    <label class="custom-checkbox">
+                                        <input type="checkbox" name="regions" value="מרכז">
+                                        <span class="checkmark"></span>
+                                        <span>מרכז</span>
+                                    </label>
+                                    <label class="custom-checkbox">
+                                        <input type="checkbox" name="regions" value="צפון">
+                                        <span class="checkmark"></span>
+                                        <span>צפון</span>
+                                    </label>
+                                    <label class="custom-checkbox">
+                                        <input type="checkbox" name="regions" value="דרום">
+                                        <span class="checkmark"></span>
+                                        <span>דרום</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="companyDescription">תיאור החברה</label>
+                            <textarea id="companyDescription" name="companyDescription" rows="3" class="form-input resize-none" required></textarea>
+                        </div>
+                    </div>
+
+                    <div class="mt-8">
+                        <button type="submit" class="btn-primary">
+                            שלח בקשת הרשמה
+                        </button>
+                    </div>
+                </form>
+
+                <div class="mt-6 text-center">
+                    <p style="color: var(--text-secondary);">
+                        כבר יש לכם חשבון?
+                        <a href="login.html" class="form-link">התחברות כאן</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="svg-column">
+            <svg width="80%" height="80%" viewBox="0 0 500 400" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <filter id="glow">
+                        <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                        <feMerge>
+                            <feMergeNode in="coloredBlur"/>
+                            <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                    </filter>
+                </defs>
+                <g opacity="0.8" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" fill="none">
+                    <path d="M 100 50 Q 150 100 200 50 T 300 50 T 400 50" />
+                    <path d="M 50 100 Q 100 150 150 100 T 250 100 T 350 100" />
+                    <path d="M 100 150 Q 150 200 200 150 T 300 150 T 400 150" />
+                    <path d="M 50 200 Q 100 250 150 200 T 250 200 T 350 200" />
+                    <path d="M 100 250 Q 150 300 200 250 T 300 250 T 400 250" />
+                    <path d="M 50 300 Q 100 350 150 300 T 250 300 T 350 300" />
+                </g>
+                <circle cx="250" cy="200" r="80" fill="rgba(0, 122, 255, 0.2)" filter="url(#glow)"/>
+                <circle cx="250" cy="200" r="60" fill="rgba(0, 122, 255, 0.3)"/>
+            </svg>
+        </div>
+    </div>
+</main>
+
+<script>
+    const fieldTranslations = {
+        username: 'שם משתמש',
+        email: 'אימייל',
+        password: 'סיסמה',
+        fullName: 'שם מלא',
+        companyName: 'שם החברה',
+        supportRegions: 'אזורי פעילות',
+        city: 'עיר',
+        address: 'כתובת',
+        phone: 'טלפון',
+        companyDescription: 'תיאור החברה',
+        website: 'אתר החברה',
+    };
+
+    function showAlert(message, type = 'error') {
+        const alertElement = document.getElementById('form-alert');
+        alertElement.innerHTML = message; // Use innerHTML to allow for line breaks
+        alertElement.className = type === 'error' ? 'form-alert' : 'form-alert success';
+        alertElement.style.display = 'flex';
+
+        setTimeout(() => {
+            alertElement.style.display = 'none';
+        }, 6000);
+    }
+
+    document.getElementById('registrationForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const formData = {
+            username: this.querySelector('input[name="username"]').value || null,
+            email: this.querySelector('input[name="email"]').value || null,
+            password: this.querySelector('input[name="password"]').value || null,
+            fullName: this.querySelector('input[name="fullName"]').value || null,
+            companyName: this.querySelector('input[name="companyName"]').value || null,
+            supportRegions: Array.from(this.querySelectorAll('input[name="regions"]:checked')).map(cb => cb.value) || null,
+            position: 'owner',
+            city: this.querySelector('input[name="city"]').value || null,
+            address: this.querySelector('input[name="address"]').value || null,
+            phone: this.querySelector('input[name="phone"]').value || null,
+            companyDescription: this.querySelector('textarea[name="companyDescription"]').value || null,
+            website: this.querySelector('input[name="website"]').value || null,
+            isRecruitmentAgency: this.querySelector('input[name="isRecruitmentAgency"]').checked || false,
+        };
+
+        try {
+            const response = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                console.log('Backend response:', result);
+                if (result.details && Array.isArray(result.details)) {
+                    const messages = result.details.map(d => {
+                        const fieldName = fieldTranslations[d.param] || d.param || 'שדה לא ידוע';
+                        const errorMsg = d.msg || 'ערך לא תקין';
+                        return `<li>${fieldName}: ${errorMsg}</li>`;
+                    }).join('');
+                    showAlert(`<strong>שגיאות וולידציה:</strong><ul style="text-align: right; margin-top: 8px;">${messages}</ul>`, 'error');
+                } else {
+                    showAlert(result.error || 'אירעה שגיאה בהרשמה', 'error');
+                }
+            } else {
+                showAlert('הרשמה בוצעה בהצלחה! הנך מועבר/ת לדף הכניסה.', 'success');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+            }
+        } catch (error) {
+            console.error('Registration error:', error);
+            showAlert('שגיאה בחיבור לשרת. אנא נסה שוב.', 'error');
+        }
+    });
+</script>
+
+</body>
+</html>

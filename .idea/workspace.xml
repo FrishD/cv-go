@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="54f98161-18da-4fb4-9bbb-65b617872576" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/studentController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/studentController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/middleware/studentSession.js" beforeDir="false" afterPath="$PROJECT_DIR$/middleware/studentSession.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/student.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/student.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/about.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/about.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/auth-style.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/auth-style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/privacy-policy.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/privacy-policy.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/register.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/student-chat.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/student-chat.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/student-details.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/student-details.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/terms-of-use.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/terms-of-use.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/verify.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/verify.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/students.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/students.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/emailService.js" beforeDir="false" afterPath="$PROJECT_DIR$/services/emailService.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/emailTemplate.html" beforeDir="false" afterPath="$PROJECT_DIR$/services/emailTemplate.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/studentService.js" beforeDir="false" afterPath="$PROJECT_DIR$/services/studentService.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/studentUtils.js" beforeDir="false" afterPath="$PROJECT_DIR$/utils/studentUtils.js" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="31W33AWmKdiyBy2dkn4HWVeCIXJ" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;JavaScript Debug.localhost:3000.executor&quot;: &quot;Debug&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/shay/Downloads/שולחן העבודה/WorkCraft/WorkCraft&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\WebStorm 2025.2\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\shay\Downloads\שולחן העבודה\WorkCraft\WorkCraft\routes" />
+      <recent name="C:\Users\shay\Downloads\שולחן העבודה\WorkCraft\WorkCraft\old" />
+      <recent name="C:\Users\shay\Downloads\שולחן העבודה\WorkCraft\WorkCraft\public" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\shay\Downloads\שולחן העבודה\WorkCraft\WorkCraft\services\public" />
+      <recent name="C:\Users\shay\Downloads\שולחן העבודה\WorkCraft\WorkCraft\services" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="localhost:3000" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:3000">
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JavaScript Debug.localhost:3000" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-e03c56caf84a-JavaScript-WS-252.23892.411" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="54f98161-18da-4fb4-9bbb-65b617872576" name="Changes" comment="" />
+      <created>1755625799351</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1755625799351</updated>
+      <workItem from="1755625800408" duration="2097000" />
+      <workItem from="1756039718047" duration="12154000" />
+      <workItem from="1756110869705" duration="17070000" />
+      <workItem from="1756202726760" duration="13920000" />
+      <workItem from="1756303109650" duration="1601000" />
+      <workItem from="1756305077352" duration="8000" />
+      <workItem from="1756305901688" duration="12000" />
+      <workItem from="1756320596128" duration="5365000" />
+      <workItem from="1756391716601" duration="6588000" />
+      <workItem from="1756459658795" duration="6382000" />
+      <workItem from="1756489428908" duration="5051000" />
+      <workItem from="1756537693470" duration="9281000" />
+      <workItem from="1756558223244" duration="9151000" />
+      <workItem from="1756623570446" duration="11936000" />
+      <workItem from="1756648856847" duration="8063000" />
+      <workItem from="1756742119082" duration="1582000" />
+      <workItem from="1756919526163" duration="3259000" />
+      <workItem from="1756929417147" duration="15000" />
+      <workItem from="1756996651369" duration="5259000" />
+      <workItem from="1757068838951" duration="21197000" />
+      <workItem from="1757138863611" duration="3277000" />
+      <workItem from="1757161903817" duration="9000" />
+      <workItem from="1757168249612" duration="606000" />
+      <workItem from="1758288523928" duration="11575000" />
+      <workItem from="1758346431865" duration="18308000" />
+      <workItem from="1758477344784" duration="638000" />
+      <workItem from="1758477990425" duration="2288000" />
+      <workItem from="1758536138545" duration="15024000" />
+      <workItem from="1758618965160" duration="2983000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/public/register.html</url>
+          <line>247</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/routes/candidates.js</url>
+          <line>102</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

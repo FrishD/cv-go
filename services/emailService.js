@@ -38,6 +38,18 @@ const createEmailTemplate = (title, successBadgeText, greeting, name, contentBod
     const textStyle = `color: #c7c7cc; font-size: 16px; line-height: 1.6; text-align: right;`;
     const buttonStyle = `background-color: #007AFF; color: #FFFFFF; padding: 16px 32px; border-radius: 14px; font-size: 16px; font-weight: 600; text-decoration: none; display: inline-block;`;
     const footerStyle = `padding: 30px; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.12); color: #8e8e93; font-size: 13px;`;
+    const socialIconStyle = `display: inline-block; margin: 0 8px;`;
+    const socialImgStyle = `width: 24px; height: 24px;`;
+    const policyLinkStyle = `color: #8e8e93; text-decoration: none; margin: 0 8px;`;
+
+    const socialLinks = {
+        linkedin: "https://www.linkedin.com/",
+        facebook: "https://www.facebook.com/",
+        instagram: "https://www.instagram.com/",
+        tiktok: "https://www.tiktok.com/",
+        discord: "https://discord.com/",
+        x: "https://x.com/",
+    };
 
     return `
         <!DOCTYPE html>
@@ -76,6 +88,19 @@ const createEmailTemplate = (title, successBadgeText, greeting, name, contentBod
                             <!-- Footer -->
                             <tr>
                                 <td align="center" style="${footerStyle}">
+                                    <div style="margin-bottom: 16px;">
+                                        <a href="${socialLinks.x}" style="${socialIconStyle}"><img src="https://img.icons8.com/ios-filled/50/8e8e93/x.png" alt="X" style="${socialImgStyle}"></a>
+                                        <a href="${socialLinks.linkedin}" style="${socialIconStyle}"><img src="https://img.icons8.com/ios-filled/50/8e8e93/linkedin.png" alt="LinkedIn" style="${socialImgStyle}"></a>
+                                        <a href="${socialLinks.facebook}" style="${socialIconStyle}"><img src="https://img.icons8.com/ios-filled/50/8e8e93/facebook-new.png" alt="Facebook" style="${socialImgStyle}"></a>
+                                        <a href="${socialLinks.instagram}" style="${socialIconStyle}"><img src="https://img.icons8.com/ios-filled/50/8e8e93/instagram-new.png" alt="Instagram" style="${socialImgStyle}"></a>
+                                        <a href="${socialLinks.tiktok}" style="${socialIconStyle}"><img src="https://img.icons8.com/ios-filled/50/8e8e93/tiktok.png" alt="TikTok" style="${socialImgStyle}"></a>
+                                        <a href="${socialLinks.discord}" style="${socialIconStyle}"><img src="https://img.icons8.com/ios-filled/50/8e8e93/discord-logo.png" alt="Discord" style="${socialImgStyle}"></a>
+                                    </div>
+                                    <div style="margin-bottom: 8px;">
+                                        <a href="#" style="${policyLinkStyle}">מדיניות פרטיות</a>
+                                        <span style="color: #8e8e93;">&bull;</span>
+                                        <a href="#" style="${policyLinkStyle}">תנאי שימוש</a>
+                                    </div>
                                     <p style="margin: 4px 0; font-family: 'Google Sans', 'Heebo', Arial, sans-serif;">© 2025 CVGO. כל הזכויות שמורות.</p>
                                 </td>
                             </tr>
@@ -259,9 +284,9 @@ const sendVerificationResultEmail = async (user, isApproved) => {
 const sendConfirmationEmail = async (candidateData) => {
     try {
         const transporter = createTransporter()
-        const { name, email, positions } = candidateData;
+        const { name, email, education } = candidateData;
         const firstName = name.split(" ")[0];
-        const profession = positions?.[0]?.title || "איש מקצוע";
+        const profession = education?.degreeField || "איש מקצוע";
         const dashboardUrl = `${process.env.BASE_URL || "http://localhost:3000"}/dashboard.html`;
 
         const contentBody = `

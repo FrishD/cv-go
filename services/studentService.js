@@ -115,37 +115,90 @@ class StudentService {
                 throw new Error('Session not found for profile update.');
             }
 
-            console.log(`Updating profile for session ${sessionId}`);
+            // Check for an existing active user with the same email, but different ID
+            if (profileData.email) {
+                const existingStudent = await Student.findOne({
+                    email: profileData.email.toLowerCase(),
+                    isActive: true,
+                    _id: { $ne: student._id }
+                });
 
-            // Map data from frontend state to student schema
+                if (existingStudent) {
+                    console.log(`Email already exists. Merging chat session ${sessionId} into existing profile ${existingStudent._id}`);
+
+                    // Merge all data into the existing student's record
+                    existingStudent.name = StudentUtils.cleanTextInput(profileData.name, 100);
+                    existingStudent.phone = StudentUtils.formatIsraeliPhone(profileData.phone);
+                    existingStudent.education.institution = profileData.institution;
+                    existingStudent.education.degreeField = profileData.major;
+                    existingStudent.education.currentDegree = mapDegree(profileData.degreeType);
+                    existingStudent.education.studyYear = profileData.year;
+                    existingStudent.education.gpa = parseFloat(profileData.gpa) || null;
+                    existingStudent.workExperience.hasExperience = profileData.experience !== 'אין';
+                    existingStudent.workExperience.description = profileData.experience;
+                    existingStudent.location.city = profileData.location;
+                    existingStudent.availability.hoursPerWeek = mapHours(profileData.hours);
+                    existingStudent.softSkills = profileData.softSkills;
+                    existingStudent.keyInfo = profileData.keyInfo;
+                    existingStudent.specialRoles = profileData.specialRoles;
+                    existingStudent.personalStatement = profileData.personalStatement;
+                    existingStudent.additionalInfo = profileData.additionalInfo;
+
+                    if (profileData.links && profileData.links !== 'אין') {
+                        if (profileData.links.includes('github.com')) existingStudent.links.github = profileData.links;
+                        else if (profileData.links.includes('linkedin.com')) existingStudent.links.linkedin = profileData.links;
+                        else existingStudent.links.portfolio = profileData.links;
+                    }
+
+                    existingStudent.profileComplete = true;
+                    existingStudent.termsAccepted = true;
+                    existingStudent.lastUpdated = new Date();
+
+                    // Copy over file references from the temporary profile
+                    if (student.cvFile && student.cvFile.filename) {
+                        existingStudent.cvFile = student.cvFile;
+                    }
+                    if (student.education.transcriptFile && student.education.transcriptFile.filename) {
+                        existingStudent.education.transcriptFile = student.education.transcriptFile;
+                    }
+
+                    await existingStudent.save();
+
+                    // Deactivate the temporary profile from the chat session
+                    student.isActive = false;
+                    student.replacedBy = existingStudent._id;
+                    await student.save();
+
+                    console.log('Successfully merged data into existing profile:', existingStudent._id);
+                    return existingStudent;
+                }
+            }
+
+            // If no existing user, update the current student from the session as before
             student.name = StudentUtils.cleanTextInput(profileData.name, 100);
             student.email = profileData.email.toLowerCase();
             student.phone = StudentUtils.formatIsraeliPhone(profileData.phone);
-
             student.education.institution = profileData.institution;
             student.education.degreeField = profileData.major;
             student.education.currentDegree = mapDegree(profileData.degreeType);
             student.education.studyYear = profileData.year;
             student.education.gpa = parseFloat(profileData.gpa) || null;
-
             student.workExperience.hasExperience = profileData.experience !== 'אין';
             student.workExperience.description = profileData.experience;
-
             student.location.city = profileData.location;
             student.availability.hoursPerWeek = mapHours(profileData.hours);
-
             student.softSkills = profileData.softSkills;
             student.keyInfo = profileData.keyInfo;
             student.specialRoles = profileData.specialRoles;
+            student.personalStatement = profileData.personalStatement;
+            student.additionalInfo = profileData.additionalInfo;
 
-            // A simple way to handle links, assuming one string
-            if (profileData.links) {
+            if (profileData.links && profileData.links !== 'אין') {
                 if (profileData.links.includes('github.com')) student.links.github = profileData.links;
                 else if (profileData.links.includes('linkedin.com')) student.links.linkedin = profileData.links;
                 else student.links.portfolio = profileData.links;
             }
 
-            // Mark profile as complete
             student.profileComplete = true;
             student.termsAccepted = true;
             student.termsAcceptedDate = new Date();

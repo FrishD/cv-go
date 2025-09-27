@@ -550,6 +550,23 @@
     </div>
 </div>
 
+<!-- Completion Modal -->
+<div id="completionModal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+    <div class="bg-gray-800 border border-gray-700 rounded-2xl shadow-2xl w-11/12 max-w-md mx-4 text-center p-8 transform transition-all" style="opacity: 0; transform: scale(0.95);">
+        <div class="w-16 h-16 bg-blue-600/20 border-2 border-blue-500/50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
+            </svg>
+        </div>
+        <h2 class="text-2xl font-bold text-white mb-2">מזל טוב, הפרופיל שלך הושלם!</h2>
+        <p class="text-gray-400 mb-8">רוצה להפיץ את קורות החיים שלך לחברות השמה?</p>
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <a href="index.html#upload-cv-section" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-transform transform hover:scale-105 w-full sm:w-auto">הפץ קו"ח</a>
+            <a href="index.html" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-transform transform hover:scale-105 w-full sm:w-auto">חזור לדף הבית</a>
+        </div>
+    </div>
+</div>
+
 
 <script>
     window.addEventListener('load', function() {
@@ -562,10 +579,23 @@
         constructor() {
             this.currentState = 'GREETING';
             this.sessionId = null;
+            this.storageKey = null;
             this.apiBase = '/api/students';
             this.isProcessing = false;
+            this.isEditing = false;
             this.temporaryData = {};
             this.parsedData = null; // Data from CV
+            this.stepMap = {
+                'GREETING': 1, 'CV_UPLOAD': 1, 'VERIFICATION': 1, 'VERIFY_SUCCESS': 1, 'VERIFY_MISSING': 1, 'VERIFY_EDIT_PICKER': 1, 'VERIFY_EDIT_FIELD': 1,
+                'COLLECT_INSTITUTION': 2,
+                'COLLECT_MAJOR': 3,
+                'COLLECT_DEGREE_TYPE': 4,
+                'COLLECT_YEAR': 5,
+                'COLLECT_GPA': 6, 'PROMPT_TRANSCRIPT': 6,
+                'PROMPT_EXPERIENCE': 7, 'COLLECT_EXPERIENCE_DETAILS': 7,
+                'COLLECT_LOCATION': 8, 'COLLECT_HOURS': 8,
+                'COLLECT_SOFT_SKILLS': 9, 'COLLECT_KEY_INFO': 9, 'COLLECT_PERSONAL_STATEMENT': 9, 'COLLECT_ADDITIONAL_INFO': 9, 'COLLECT_SPECIAL_ROLES': 9, 'PROMPT_LINKS': 9, 'PROMPT_TERMS': 9, 'SHOW_SUMMARY': 9, 'SAVE_PROFILE': 9, 'FINAL_MESSAGE': 9
+            };
             this.MESSAGES = this.getMessages();
             this.init();
         }
@@ -604,10 +634,13 @@
         }
 
         async init() {
-            // Simplified init. Session resumption can be added back later if needed.
             try {
                 await this.startSession();
-                this.renderCurrentState();
+                const isResumed = this.loadStateFromLocalStorage();
+                if (!isResumed) {
+                    this.renderCurrentState();
+                }
+                this.updateProgress();
             } catch (error) {
                 console.error("Initialization failed:", error);
                 this.addMessage(this.MESSAGES.ERROR_GENERAL, false);
@@ -623,6 +656,7 @@
             const data = await response.json();
             if (!data.success) throw new Error('Failed to start session');
             this.sessionId = data.sessionId;
+            this.storageKey = `student_profile_chat_${this.sessionId}`;
             console.log('New session started:', this.sessionId);
         }
 
@@ -634,6 +668,8 @@
             Object.assign(this.temporaryData, data);
 
             this.currentState = newState;
+            this.saveStateToLocalStorage();
+            this.updateProgress();
             this.renderCurrentState();
         }
 
@@ -699,16 +735,37 @@
 
         render_VERIFICATION() {
             const data = this.temporaryData;
-            const missingFields = [];
-            if (!data.name || data.name === 'לא זוהה') missingFields.push({key: 'name', label: 'שם מלא'});
-            if (!data.email || data.email === 'לא זוהה') missingFields.push({key: 'email', label: 'אימייל'});
-            if (!data.phone || data.phone === 'לא זוהה') missingFields.push({key: 'phone', label: 'טלפון'});
 
-            if (missingFields.length === 0) {
-                this.render_VERIFY_SUCCESS(data);
+            // Use a more robust, sequential check for missing fields
+            if (!data.name || data.name.trim() === '' || data.name === 'לא זוהה') {
+                this.askForMissingField('name', 'שם מלא');
+            } else if (!data.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+                this.askForMissingField('email', 'אימייל');
+            } else if (!data.phone || data.phone.trim().length < 9) {
+                this.askForMissingField('phone', 'טלפון');
             } else {
-                this.render_VERIFY_MISSING(missingFields);
+                // All details are present and valid, proceed to success state
+                this.render_VERIFY_SUCCESS(data);
             }
+        }
+
+        askForMissingField(key, label) {
+            let message;
+            if (this.temporaryData.cvJustUploaded) {
+                 message = this.MESSAGES.AFTER_CV_UPLOAD_MISSING_ONE.replace('{missing}', label);
+                 // We only want to show this special message once.
+                 delete this.temporaryData.cvJustUploaded;
+            } else {
+                message = this.MESSAGES.VERIFY_MISSING_ONE.replace('{missing}', label);
+            }
+            this.addMessage(message, false);
+
+            this.renderTextInput(`הכנס/י ${label}`, (value) => {
+                this.addMessage(value, true);
+                this.temporaryData[key] = value;
+                // Loop back to the start of the verification process
+                this.transitionTo('VERIFICATION');
+            });
         }
 
         render_VERIFY_SUCCESS(data) {
@@ -740,30 +797,6 @@
             });
         }
 
-        render_VERIFY_MISSING(missingFields) {
-            let message;
-            if (this.temporaryData.cvJustUploaded) {
-                message = this.MESSAGES.AFTER_CV_UPLOAD_MISSING_ONE.replace('{missing}', missingFields[0].label);
-                delete this.temporaryData.cvJustUploaded;
-            } else if (missingFields.length === 1) {
-                message = this.MESSAGES.VERIFY_MISSING_ONE.replace('{missing}', missingFields[0].label);
-            } else {
-                this.addMessage(this.MESSAGES.VERIFY_MISSING_MANY, false);
-                message = `בוא/י נתחיל עם ${missingFields[0].label}.`;
-            }
-            this.addMessage(message, false);
-
-            this.renderTextInput(`הכנס/י ${missingFields[0].label}`, (value) => {
-                this.addMessage(value, true);
-                this.temporaryData[missingFields[0].key] = value;
-                missingFields.shift();
-                if (missingFields.length > 0) {
-                    this.render_VERIFY_MISSING(missingFields);
-                } else {
-                    this.transitionTo('VERIFICATION');
-                }
-            });
-        }
 
         render_VERIFY_EDIT_PICKER() {
             this.addMessage("איזה פרט תרצה/י לתקן?", false);
@@ -793,7 +826,7 @@
             this.renderSearchableInput("הקלד/י את שם המוסד...", '/data/institutions.json', (value) => {
                 this.addMessage(value, true);
                 this.transitionTo('COLLECT_MAJOR', { institution: value });
-            });
+            }, this.temporaryData.institution);
         }
 
         render_COLLECT_MAJOR() {
@@ -801,7 +834,7 @@
             this.renderSearchableInput("הקלד/י את תחום הלימודים...", '/data/majors.json', (value) => {
                 this.addMessage(value, true);
                 this.transitionTo('COLLECT_DEGREE_TYPE', { major: value });
-            });
+            }, this.temporaryData.major);
         }
 
         render_COLLECT_DEGREE_TYPE() {
@@ -813,7 +846,7 @@
             ], (option) => {
                 this.addMessage(option.label, true);
                 this.transitionTo('COLLECT_YEAR', { degreeType: option.label });
-            });
+            }, this.temporaryData.degreeType);
         }
 
         render_COLLECT_YEAR() {
@@ -826,7 +859,7 @@
             ], (option) => {
                 this.addMessage(option.label, true);
                 this.transitionTo('COLLECT_GPA', { year: option.label });
-            });
+            }, this.temporaryData.year);
         }
 
         render_COLLECT_GPA() {
@@ -834,7 +867,7 @@
             this.renderTextInput("הקלד/י ממוצע (למשל 85.5)", (value) => {
                 this.addMessage(value, true);
                 this.transitionTo('PROMPT_TRANSCRIPT', { gpa: value });
-            });
+            }, this.temporaryData.gpa);
         }
 
         render_PROMPT_TRANSCRIPT() {
@@ -864,19 +897,19 @@
             this.renderTextInput("ספר/י בקצרה על התפקיד...", (value) => {
                 this.addMessage(value, true);
                 this.transitionTo('COLLECT_LOCATION', { experience: value });
-            });
+            }, this.temporaryData.experience);
         }
 
         render_COLLECT_LOCATION() {
             const message = this.temporaryData.experience === 'אין'
                 ? this.MESSAGES.EXPERIENCE_NO_AND_PROMPT_LOCATION
-                : this.MESSAGES.COLLECT_LOCATION;
+                : "באיזה אזור בא לך לעבוד? 📍";
             this.addMessage(message, false);
 
-            this.renderSearchableInput("הקלד/י אזור מועדף...", '/data/locations.json', (value) => {
+            this.renderTextInput("הקלד/י עיר או אזור...", (value) => {
                 this.addMessage(value, true);
                 this.transitionTo('COLLECT_HOURS', { location: value });
-            });
+            }, this.temporaryData.location);
         }
 
         render_COLLECT_HOURS() {
@@ -884,7 +917,7 @@
             this.renderTextInput("לדוגמה: 20, 25, 30...", (value) => {
                 this.addMessage(value, true);
                 this.transitionTo('COLLECT_SOFT_SKILLS', { hours: value });
-            });
+            }, this.temporaryData.hours);
         }
 
         render_COLLECT_SOFT_SKILLS() {
@@ -892,7 +925,7 @@
             this.renderTextInput("למשל, עבודה בצוות או פתרון בעיות...", (value) => {
                 this.addMessage(value, true);
                 this.transitionTo('COLLECT_KEY_INFO', { softSkills: value });
-            });
+            }, this.temporaryData.softSkills);
         }
 
         render_COLLECT_KEY_INFO() {
@@ -900,7 +933,7 @@
             this.renderTextInput("פרויקט שאת/ה גאה בו במיוחד, או מוטיבציה מטורפת...", (value) => {
                 this.addMessage(value, true);
                 this.transitionTo('COLLECT_PERSONAL_STATEMENT', { keyInfo: value });
-            });
+            }, this.temporaryData.keyInfo);
         }
 
         render_COLLECT_PERSONAL_STATEMENT() {
@@ -908,7 +941,7 @@
             this.renderTextInput("כתוב/י הצהרה אישית...", (value) => {
                 this.addMessage(value, true);
                 this.transitionTo('COLLECT_ADDITIONAL_INFO', { personalStatement: value });
-            });
+            }, this.temporaryData.personalStatement);
         }
 
         render_COLLECT_ADDITIONAL_INFO() {
@@ -916,7 +949,7 @@
             this.renderTextInput("יש עוד משהו חשוב?", (value) => {
                 this.addMessage(value, true);
                 this.transitionTo('COLLECT_SPECIAL_ROLES', { additionalInfo: value });
-            });
+            }, this.temporaryData.additionalInfo);
         }
 
         render_COLLECT_SPECIAL_ROLES() {
@@ -924,7 +957,7 @@
             this.renderTextInput("ספר/י על תפקידים מיוחדים או פרויקטים...", (value) => {
                 this.addMessage(value, true);
                 this.transitionTo('PROMPT_LINKS', { specialRoles: value });
-            });
+            }, this.temporaryData.specialRoles);
         }
 
         render_PROMPT_LINKS() {
@@ -932,7 +965,7 @@
             this.renderTextInput("הדבק/י כאן לינקים (GitHub, Portfolio, וכו')", (value) => {
                 this.addMessage(value, true);
                 this.transitionTo('PROMPT_TERMS', { links: value });
-            });
+            }, this.temporaryData.links, true); // Pass true to show skip button
         }
 
         render_PROMPT_TERMS() {
@@ -970,6 +1003,17 @@
         render_FINAL_MESSAGE() {
             this.addMessage(this.MESSAGES.FINAL_MESSAGE, false);
             document.getElementById('inputArea').innerHTML = '';
+
+            const completionModal = document.getElementById('completionModal');
+            if (completionModal) {
+                completionModal.classList.remove('hidden');
+                // Animate the modal entrance
+                setTimeout(() => {
+                    const modalContent = completionModal.querySelector('div');
+                    modalContent.style.opacity = '1';
+                    modalContent.style.transform = 'scale(1)';
+                }, 50);
+            }
         }
 
         generateProfileSummary() {
@@ -1022,11 +1066,85 @@
                 throw new Error(result.error || 'Failed to save profile');
             }
             console.log('Profile saved successfully.');
+            this.clearStateFromLocalStorage();
+        }
+
+        // --- Local Storage Functions ---
+
+        clearStateFromLocalStorage() {
+            if (!this.storageKey) return;
+            localStorage.removeItem(this.storageKey);
+            console.log('State cleared from localStorage');
+        }
+
+        saveStateToLocalStorage() {
+            if (!this.storageKey) return;
+            const stateToSave = {
+                currentState: this.currentState,
+                temporaryData: this.temporaryData
+            };
+            localStorage.setItem(this.storageKey, JSON.stringify(stateToSave));
+            console.log('State saved to localStorage');
+        }
+
+        loadStateFromLocalStorage() {
+            if (!this.storageKey) return false;
+            const savedState = localStorage.getItem(this.storageKey);
+            if (savedState) {
+                const { currentState, temporaryData } = JSON.parse(savedState);
+
+                if (currentState === 'FINAL_MESSAGE') {
+                    this.isEditing = true;
+                    this.currentState = 'COLLECT_INSTITUTION'; // Restart questionnaire for editing
+                    this.temporaryData = temporaryData; // Keep the data
+                } else {
+                    this.currentState = currentState;
+                    this.temporaryData = temporaryData;
+                }
+
+                console.log('State loaded from localStorage:', this.currentState);
+                this.rebuildChatHistory();
+                this.renderCurrentState();
+                return true;
+            }
+            return false;
+        }
+
+        rebuildChatHistory() {
+            let message;
+            if (this.isEditing) {
+                message = "ברוך/ה שובך! בוא/י נערוך את הפרופיל שלך. התשובות הקודמות שלך יוצגו לעיונך.";
+            } else {
+                message = "ברוך/ה שובך! נמשיך מאיפה שהפסקנו.";
+            }
+            this.addMessage(message, false, false);
+        }
+
+
+        updateProgress() {
+            const totalSteps = 9;
+            const currentStepNumber = this.stepMap[this.currentState] || 1;
+
+            const progressFill = document.getElementById('progressFill');
+            const stepCounter = document.getElementById('stepCounter');
+
+            const percentage = Math.max(5.5, (currentStepNumber / totalSteps) * 100);
+
+            if (progressFill) {
+                progressFill.style.width = `${percentage}%`;
+            }
+            if (stepCounter) {
+                if (currentStepNumber >= totalSteps) {
+                    stepCounter.textContent = "שלב אחרון";
+                } else {
+                    stepCounter.textContent = `שלב ${currentStepNumber} מתוך ${totalSteps}`;
+                }
+            }
         }
 
         // --- Helper Functions ---
 
-        async renderSearchableInput(placeholder, dataUrl, callback) {
+        async renderSearchableInput(placeholder, dataUrl, callback, defaultValue = '') {
             const inputArea = document.getElementById('inputArea');
             const inputId = 'textInput';
             const dropdownId = 'searchDropdown';
@@ -1042,6 +1160,7 @@
                                 class="input-field w-full px-4 py-3"
                                 placeholder="${placeholder}"
                                 autocomplete="off"
+                                value="${defaultValue || ''}"
                             >
                         </div>
                         <button class="btn-send flex items-center justify-center" id="sendBtn" disabled>
@@ -1057,8 +1176,10 @@
 
             let fuse;
             let sourceData = [];
+
             try {
                 const response = await fetch(dataUrl);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 sourceData = await response.json();
                 fuse = new Fuse(sourceData, {
                     isCaseSensitive: false,
@@ -1071,69 +1192,57 @@
                 return;
             }
 
-            const updateDropdown = (results) => {
-                if (results.length > 0) {
-                    dropdown.innerHTML = results.slice(0, 5).map(result =>
-                        `<div class="p-3 hover:bg-gray-700 cursor-pointer" data-value="${result.item}">${result.item}</div>`
-                    ).join('');
-                    dropdown.classList.remove('hidden');
-                } else {
-                    dropdown.classList.add('hidden');
-                }
+            const validateInput = () => {
+                const value = input.value.trim();
+                const exactMatch = sourceData.find(item => item.toLowerCase() === value.toLowerCase());
+                sendBtn.disabled = !exactMatch;
             };
+
+            const updateDropdown = (results) => {
+                dropdown.innerHTML = results.slice(0, 5).map(result =>
+                    `<div class="p-3 hover:bg-gray-700 cursor-pointer" data-value="${result.item}">${result.item}</div>`
+                ).join('');
+                dropdown.classList.toggle('hidden', results.length === 0);
+            };
+
+            validateInput();
 
             input.addEventListener('input', () => {
                 const query = input.value;
-                sendBtn.disabled = !query;
-                if (query.length > 0) {
+                if (query) {
                     const results = fuse.search(query);
                     updateDropdown(results);
                 } else {
                     dropdown.classList.add('hidden');
                 }
+                validateInput();
             });
 
             dropdown.addEventListener('click', (e) => {
                 if (e.target.dataset.value) {
                     input.value = e.target.dataset.value;
                     dropdown.classList.add('hidden');
-                    sendBtn.disabled = false;
+                    validateInput();
                     input.focus();
                 }
             });
 
             const submitHandler = () => {
-                const value = input.value.trim();
-                if (value) {
-                    // Check for exact match first (case-insensitive)
-                    const exactMatch = sourceData.find(item => item.toLowerCase() === value.toLowerCase());
-                    if (exactMatch) {
-                        callback(exactMatch);
-                        return;
-                    }
-
-                    // If no exact match, check for a very close fuzzy match
-                    const results = fuse.search(value);
-                    if (results.length > 0 && results[0].score < 0.1) {
-                        callback(results[0].item);
-                        return;
-                    }
-
-                    // If still no good match, inform the user
-                    this.addMessage('אנא בחר/י אפשרות מהרשימה המוצעת.', false);
+                if (!sendBtn.disabled) {
+                    callback(input.value.trim());
                 }
             };
 
             sendBtn.addEventListener('click', submitHandler);
             input.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
+                if (e.key === 'Enter' && !e.shiftKey && !sendBtn.disabled) {
                     e.preventDefault();
                     submitHandler();
                 }
             });
 
             document.addEventListener('click', (e) => {
-                if (!e.target.closest('.relative')) {
+                if (!input.contains(e.target) && !dropdown.contains(e.target)) {
                     dropdown.classList.add('hidden');
                 }
             }, true);
@@ -1176,11 +1285,11 @@
             requestAnimationFrame(() => this.scrollToBottom());
         }
 
-        renderButtons(options, callback) {
+        renderButtons(options, callback, defaultValue = '') {
             const inputArea = document.getElementById('inputArea');
             inputArea.innerHTML = `
                 <div class="flex flex-wrap gap-2 justify-center">
-                    ${options.map(opt => `<button class="option-button" data-value="${opt.value}">${opt.label}</button>`).join('')}
+                    ${options.map(opt => `<button class="option-button ${opt.label === defaultValue ? 'selected' : ''}" data-value="${opt.value}">${opt.label}</button>`).join('')}
                 </div>`;
 
             inputArea.querySelectorAll('.option-button').forEach(btn => {
@@ -1193,25 +1302,33 @@
             });
         }
 
-        renderTextInput(placeholder, callback) {
+        renderTextInput(placeholder, callback, defaultValue = '', showSkip = false) {
             const inputArea = document.getElementById('inputArea');
             const isTextarea = placeholder.includes('ספר/י') || placeholder.includes('כישורים') || placeholder.includes('פרויקט');
             const inputId = 'textInput';
+            const inputTag = isTextarea ?
+                `<textarea id="${inputId}" class="input-field w-full px-4 py-3 pr-12 min-h-[80px] resize-none" placeholder="${placeholder}">${defaultValue || ''}</textarea>` :
+                `<input type="text" id="${inputId}" class="input-field w-full px-4 py-3 pr-12" placeholder="${placeholder}" value="${defaultValue || ''}">`;
+
+            const skipButtonHTML = showSkip ? `<button class="option-button" id="skipBtn">דלג</button>` : '';
 
             inputArea.innerHTML = `
                 <div class="flex items-${isTextarea ? 'end' : 'center'} gap-3">
+                    ${skipButtonHTML}
                     <div class="flex-1">
-                        <${isTextarea ? 'textarea' : 'input'}
-                            type="text"
-                            id="${inputId}"
-                            class="input-field w-full px-4 py-3 pr-12 ${isTextarea ? 'min-h-[80px] resize-none' : ''}"
-                            placeholder="${placeholder}"
-                        ></${isTextarea ? 'textarea' : 'input'}>
+                        ${inputTag}
                     </div>
                     <button class="btn-send flex items-center justify-center" id="sendBtn">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
                     </button>
                 </div>`;
+
+            if (showSkip) {
+                document.getElementById('skipBtn').addEventListener('click', () => {
+                    this.addMessage("דילוג", true);
+                    this.transitionTo('PROMPT_TERMS', { links: 'אין' });
+                });
+            }
 
             const input = document.getElementById(inputId);
             const sendBtn = document.getElementById('sendBtn');

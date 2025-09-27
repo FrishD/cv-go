@@ -26,18 +26,30 @@ const createTransporter = () => {
 // Email-safe template generator
 const createEmailTemplate = (title, successBadgeText, greeting, name, contentBody, ctaText, ctaUrl) => {
     const baseUrl = process.env.BASE_URL || "http://localhost:3000";
-    // Email-safe styles using inline CSS and tables for layout
-    const bodyStyle = `font-family: 'Heebo', Arial, sans-serif; background-color: #000000; color: #FFFFFF; margin: 0; padding: 0; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%;`;
-    const wrapperStyle = `width: 100%; background-color: #000000; padding: 40px 20px;`;
-    const containerStyle = `max-width: 600px; margin: 0 auto; background-color: #1a1a1a; border: 1px solid #333333; border-radius: 12px;`;
-    const headerStyle = `padding: 40px 30px 30px; text-align: center; border-bottom: 1px solid #333333;`;
-    const logoStyle = `height: 60px; width: auto; margin-bottom: 20px;`;
-    const contentStyle = `padding: 40px 30px; color: #FFFFFF;`;
-    const badgeStyle = `background-color: #223322; color: #30D158; padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; border: 1px solid #30D158;`;
-    const greetingStyle = `color: #FFFFFF; font-size: 24px; font-weight: 600; margin: 0 0 15px 0;`;
-    const textStyle = `color: #DDDDDD; font-size: 16px; line-height: 1.6;`;
-    const buttonStyle = `background-color: #007AFF; color: #FFFFFF; padding: 16px 32px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; display: inline-block;`;
-    const footerStyle = `padding: 30px; text-align: center; border-top: 1px solid #333333; color: #AAAAAA; font-size: 13px;`;
+    // Styles inspired by verify.html, adapted for email clients
+    const bodyStyle = `font-family: 'Google Sans', 'Heebo', Arial, sans-serif; background-color: #000000; color: #ffffff; margin: 0; padding: 0; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; background-image: radial-gradient(circle, rgba(0, 45, 100, 0.8) 0%, rgba(0, 45, 100, 0.2) 70%, rgba(0, 45, 100, 0.1) 100%);`;
+    const wrapperStyle = `width: 100%; background-color: transparent; padding: 40px 20px;`;
+    const containerStyle = `max-width: 600px; margin: 0 auto; background-color: rgba(28, 28, 30, 0.7); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 24px; backdrop-filter: blur(50px); -webkit-backdrop-filter: blur(50px);`;
+    const headerStyle = `padding: 40px 30px 30px; text-align: center; border-bottom: 1px solid rgba(255, 255, 255, 0.12);`;
+    const logoStyle = `height: 50px; width: auto; margin-bottom: 20px;`;
+    const contentStyle = `padding: 40px 30px; color: #f2f2f7; text-align: right;`;
+    const badgeStyle = `background-color: rgba(0, 122, 255, 0.15); color: #0091ff; padding: 12px 24px; border-radius: 12px; font-size: 14px; font-weight: 600; border: 1px solid rgba(0, 122, 255, 0.3);`;
+    const greetingStyle = `color: #ffffff; font-size: 24px; font-weight: 600; margin: 0 0 15px 0; text-align: right;`;
+    const textStyle = `color: #c7c7cc; font-size: 16px; line-height: 1.6; text-align: right;`;
+    const buttonStyle = `background-color: #007AFF; color: #FFFFFF; padding: 16px 32px; border-radius: 14px; font-size: 16px; font-weight: 600; text-decoration: none; display: inline-block;`;
+    const footerStyle = `padding: 30px; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.12); color: #8e8e93; font-size: 13px;`;
+    const socialIconStyle = `display: inline-block; margin: 0 8px;`;
+    const socialImgStyle = `width: 24px; height: 24px;`;
+    const policyLinkStyle = `color: #8e8e93; text-decoration: none; margin: 0 8px;`;
+
+    const socialLinks = {
+        linkedin: "https://www.linkedin.com/",
+        facebook: "https://www.facebook.com/",
+        instagram: "https://www.instagram.com/",
+        tiktok: "https://www.tiktok.com/",
+        discord: "https://discord.com/",
+        x: "https://x.com/",
+    };
 
     return `
         <!DOCTYPE html>
@@ -47,6 +59,7 @@ const createEmailTemplate = (title, successBadgeText, greeting, name, contentBod
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>CVGO - ${title}</title>
             <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet" type="text/css">
+            <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" type="text/css">
         </head>
         <body style="${bodyStyle}">
             <table width="100%" border="0" cellspacing="0" cellpadding="0" style="${wrapperStyle}">
@@ -57,8 +70,8 @@ const createEmailTemplate = (title, successBadgeText, greeting, name, contentBod
                             <tr>
                                 <td align="center" style="${headerStyle}">
                                     <img src="${baseUrl}/logo.png" alt="CVGO Logo" style="${logoStyle}" />
-                                    <h1 style="color: #FFFFFF; font-size: 28px; font-weight: 700; margin: 0; font-family: 'Heebo', Arial, sans-serif;">CVGO</h1>
-                                    <p style="color: #AAAAAA; font-size: 13px; font-weight: 500; font-family: 'Heebo', Arial, sans-serif;">פלטפורמת גיוס מקצועית</p>
+                                    <h1 style="color: #f2f2f7; font-size: 28px; font-weight: 700; margin: 0; font-family: 'Google Sans', 'Heebo', Arial, sans-serif;">CVGO</h1>
+                                    <p style="color: #8e8e93; font-size: 13px; font-weight: 500; font-family: 'Google Sans', 'Heebo', Arial, sans-serif;">פלטפורמת גיוס מקצועית</p>
                                 </td>
                             </tr>
                             <!-- Main Content -->
@@ -66,8 +79,8 @@ const createEmailTemplate = (title, successBadgeText, greeting, name, contentBod
                                 <td style="${contentStyle}">
                                     <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                         <tr><td align="center" style="padding-bottom: 30px;"><span style="${badgeStyle}">${successBadgeText}</span></td></tr>
-                                        <tr><td style="${greetingStyle}; font-family: 'Heebo', Arial, sans-serif;">${greeting} ${name},</td></tr>
-                                        <tr><td style="${textStyle}; font-family: 'Heebo', Arial, sans-serif;">${contentBody}</td></tr>
+                                        <tr><td style="${greetingStyle}; font-family: 'Google Sans', 'Heebo', Arial, sans-serif;">${greeting} ${name},</td></tr>
+                                        <tr><td style="${textStyle}; font-family: 'Google Sans', 'Heebo', Arial, sans-serif;">${contentBody}</td></tr>
                                         ${ctaUrl ? `<tr><td align="center" style="padding-top: 30px;"><a href="${ctaUrl}" target="_blank" style="${buttonStyle}">${ctaText}</a></td></tr>` : ""}
                                     </table>
                                 </td>
@@ -75,7 +88,20 @@ const createEmailTemplate = (title, successBadgeText, greeting, name, contentBod
                             <!-- Footer -->
                             <tr>
                                 <td align="center" style="${footerStyle}">
-                                    <p style="margin: 4px 0; font-family: 'Heebo', Arial, sans-serif;">© 2025 CVGO. כל הזכויות שמורות.</p>
+                                    <div style="margin-bottom: 16px;">
+                                        <a href="${socialLinks.x}" style="${socialIconStyle}"><img src="https://img.icons8.com/ios-filled/50/8e8e93/x.png" alt="X" style="${socialImgStyle}"></a>
+                                        <a href="${socialLinks.linkedin}" style="${socialIconStyle}"><img src="https://img.icons8.com/ios-filled/50/8e8e93/linkedin.png" alt="LinkedIn" style="${socialImgStyle}"></a>
+                                        <a href="${socialLinks.facebook}" style="${socialIconStyle}"><img src="https://img.icons8.com/ios-filled/50/8e8e93/facebook-new.png" alt="Facebook" style="${socialImgStyle}"></a>
+                                        <a href="${socialLinks.instagram}" style="${socialIconStyle}"><img src="https://img.icons8.com/ios-filled/50/8e8e93/instagram-new.png" alt="Instagram" style="${socialImgStyle}"></a>
+                                        <a href="${socialLinks.tiktok}" style="${socialIconStyle}"><img src="https://img.icons8.com/ios-filled/50/8e8e93/tiktok.png" alt="TikTok" style="${socialImgStyle}"></a>
+                                        <a href="${socialLinks.discord}" style="${socialIconStyle}"><img src="https://img.icons8.com/ios-filled/50/8e8e93/discord-logo.png" alt="Discord" style="${socialImgStyle}"></a>
+                                    </div>
+                                    <div style="margin-bottom: 8px;">
+                                        <a href="#" style="${policyLinkStyle}">מדיניות פרטיות</a>
+                                        <span style="color: #8e8e93;">&bull;</span>
+                                        <a href="#" style="${policyLinkStyle}">תנאי שימוש</a>
+                                    </div>
+                                    <p style="margin: 4px 0; font-family: 'Google Sans', 'Heebo', Arial, sans-serif;">© 2025 CVGO. כל הזכויות שמורות.</p>
                                 </td>
                             </tr>
                         </table>
@@ -258,9 +284,9 @@ const sendVerificationResultEmail = async (user, isApproved) => {
 const sendConfirmationEmail = async (candidateData) => {
     try {
         const transporter = createTransporter()
-        const { name, email, positions } = candidateData;
+        const { name, email, education } = candidateData;
         const firstName = name.split(" ")[0];
-        const profession = positions?.[0]?.title || "איש מקצוע";
+        const profession = education?.degreeField || "איש מקצוע";
         const dashboardUrl = `${process.env.BASE_URL || "http://localhost:3000"}/dashboard.html`;
 
         const contentBody = `
@@ -423,47 +449,62 @@ const sendDistributionTestEmail = async (testEmail, agencyInfo) => {
         const dashboardUrl = `${process.env.BASE_URL || "http://localhost:3000"}/dashboard.html`;
         const mockCandidate = {
             name: "ישראל ישראלי",
-            phone: "050-123-4567",
-            email: "test@example.com",
-            previousJob: "מפתח תוכנה Senior",
-            experienceYears: "5",
-            requestedPositions: "Full Stack Developer, Backend Developer, Team Lead",
-            region: "מרכז",
+            phone: "050-000-0000",
+            email: "israel.israeli@example.com",
+            experienceYears: "5+",
+            requestedPositions: "מהנדס/ת תוכנה",
+            region: "כל הארץ",
         };
 
         const contentBody = `
-            <p style="color: #DDDDDD; font-size: 16px; line-height: 1.6;"><strong>🧪 אימייל בדיקה - מערכת הפצת קורות חיים</strong></p>
-            <p style="color: #DDDDDD; font-size: 16px; line-height: 1.6;">זהו אימייל בדיקה כדי לוודא שמערכת הפצת קורות החיים שלך פועלת כראוי.</p>
+            <p style="text-align: right; color: #c7c7cc; font-size: 16px; line-height: 1.6;">זהו אימייל בדיקה אוטומטי שנועד לוודא כי מערכת קבלת קורות החיים עבור סוכנות הגיוס שלך פועלת באופן תקין.</p>
+            <p style="text-align: right; color: #c7c7cc; font-size: 16px; line-height: 1.6;">קבלת אימייל זה מאשרת שהכתובת שהוגדרה (${testEmail}) מקבלת התראות בהצלחה. להלן דוגמה למבנה הנתונים שתקבלו בעת הפצת מועמד רלוונטי:</p>
             <br>
-            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #2a2a2a; border-radius: 12px; padding: 20px; border: 1px solid #333333;">
-                <tr><td style="font-size: 18px; font-weight: 600; color: #FFFFFF; padding-bottom: 15px; font-family: 'Heebo', Arial, sans-serif;">פרופיל מועמד לדוגמה</td></tr>
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: rgba(40, 40, 40, 0.7); border-radius: 12px; padding: 20px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                <tr><td style="font-size: 18px; font-weight: 600; color: #ffffff; padding-bottom: 15px; font-family: 'Google Sans', 'Heebo', Arial, sans-serif; text-align: right;">פרופיל מועמד לדוגמה</td></tr>
                 <tr><td style="padding-top: 15px;">
-                    <table border="0" cellpadding="5" cellspacing="0" width="100%">
-                        <tr><td style="color: #AAAAAA;">שם</td><td style="color: #FFFFFF; text-align: left;">${mockCandidate.name}</td></tr>
-                        <tr><td style="color: #AAAAAA;">טלפון</td><td style="color: #FFFFFF; text-align: left;">${mockCandidate.phone}</td></tr>
-                        <tr><td style="color: #AAAAAA;">אימייל</td><td style="color: #FFFFFF; text-align: left;">${mockCandidate.email}</td></tr>
-                        <tr><td style="color: #AAAAAA;">ניסיון</td><td style="color: #FFFFFF; text-align: left;">${mockCandidate.experienceYears} שנים</td></tr>
+                    <table border="0" cellpadding="8" cellspacing="0" width="100%">
+                        <tr>
+                            <td style="color: #c7c7cc; text-align: right; font-family: 'Heebo', Arial, sans-serif; width: 40%;">שם מלא:</td>
+                            <td style="color: #ffffff; text-align: right; font-family: 'Heebo', Arial, sans-serif;">${mockCandidate.name}</td>
+                        </tr>
+                        <tr>
+                            <td style="color: #c7c7cc; text-align: right; font-family: 'Heebo', Arial, sans-serif;">טלפון:</td>
+                            <td style="color: #ffffff; text-align: right; font-family: 'Heebo', Arial, sans-serif;">${mockCandidate.phone}</td>
+                        </tr>
+                        <tr>
+                            <td style="color: #c7c7cc; text-align: right; font-family: 'Heebo', Arial, sans-serif;">דוא"ל:</td>
+                            <td style="color: #ffffff; text-align: right; font-family: 'Heebo', Arial, sans-serif;">${mockCandidate.email}</td>
+                        </tr>
+                        <tr>
+                            <td style="color: #c7c7cc; text-align: right; font-family: 'Heebo', Arial, sans-serif;">שנות ניסיון:</td>
+                            <td style="color: #ffffff; text-align: right; font-family: 'Heebo', Arial, sans-serif;">${mockCandidate.experienceYears}</td>
+                        </tr>
+                         <tr>
+                            <td style="color: #c7c7cc; text-align: right; font-family: 'Heebo', Arial, sans-serif;">תפקיד מבוקש:</td>
+                            <td style="color: #ffffff; text-align: right; font-family: 'Heebo', Arial, sans-serif;">${mockCandidate.requestedPositions}</td>
+                        </tr>
                     </table>
                 </td></tr>
             </table>
             <br>
-            <p style="color: #DDDDDD; font-size: 16px; line-height: 1.6;">כאשר מועמדים אמיתיים יגישו את קורות החיים שלהם, תקבלו אימיילים דומים עם פרטיהם.</p>
+            <p style="text-align: right; color: #c7c7cc; font-size: 16px; line-height: 1.6;">כאשר מועמדים רלוונטיים יופצו למערכת, תקבלו אימיילים דומים עם פרטיהם המלאים.</p>
         `;
 
         const html = createEmailTemplate(
-            "בדיקת מערכת הפצה",
-            "🧪 הודעת בדיקה",
-            "שלום",
-            `צוות הגיוס של ${agencyInfo.companyName}`,
+            "בדיקת תקינות מערכת",
+            "בדיקת תקינות",
+            "שלום רב,",
+            `צוות ${agencyInfo.companyName}`,
             contentBody,
-            "גישה ללוח המחוונים",
+            "חזרה ללוח הבקרה",
             dashboardUrl
         );
 
         const result = await transporter.sendMail({
             from: process.env.CVGO_EMAIL || "noreply@cvgo.pro",
             to: testEmail,
-            subject: "🧪 בדיקה - מערכת הפצת קורות חיים של CVGO",
+            subject: "בדיקת תקינות מערכת הפצת קורות חיים - CVGO",
             html: html,
             headers: {
                 "X-Priority": "3",

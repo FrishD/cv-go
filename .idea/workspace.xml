@@ -5,24 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="54f98161-18da-4fb4-9bbb-65b617872576" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/services/public/google_logo5b6f.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/studentController.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/studentController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/middleware/studentSession.js" beforeDir="false" afterPath="$PROJECT_DIR$/middleware/studentSession.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/student.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/student.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/about.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/about.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/auth-style.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/auth-style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/privacy-policy.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/privacy-policy.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/register.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/institutions.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/locations.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/studyFields.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/data/institutions.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/data/institutions.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/data/majors.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/data/majors.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/student-chat.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/student-chat.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/student-details.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/student-details.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/terms-of-use.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/terms-of-use.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/verify.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/verify.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/students.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/students.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/emailService.js" beforeDir="false" afterPath="$PROJECT_DIR$/services/emailService.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/emailTemplate.html" beforeDir="false" afterPath="$PROJECT_DIR$/services/emailTemplate.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/studentService.js" beforeDir="false" afterPath="$PROJECT_DIR$/services/studentService.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/studentUtils.js" beforeDir="false" afterPath="$PROJECT_DIR$/utils/studentUtils.js" afterDir="false" />
     </list>
@@ -125,6 +117,7 @@
       <workItem from="1758477990425" duration="2288000" />
       <workItem from="1758536138545" duration="15024000" />
       <workItem from="1758618965160" duration="2983000" />
+      <workItem from="1758966884272" duration="2634000" />
     </task>
     <servers />
   </component>

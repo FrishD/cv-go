@@ -1,6 +1,7 @@
 // utils/studentUtils.js - Student Profile Utilities
 const path = require('path');
 const fs = require('fs').promises;
+const { maskSensitiveData } = require('../services/maskingService');
 
 class StudentUtils {
     // Validate file type and size
@@ -214,39 +215,6 @@ class StudentUtils {
         return sanitized;
     }
 
-    static blurSensitiveInfo(text, studentName = '') {
-        if (!text) return '';
-
-        let blurredText = text;
-        const placeholder = '█';
-
-        // Regex patterns for PII
-        const emailRegex = /[\w-\.]+@([\w-]+\.)+[\w-]{2,4}/g;
-        const phoneRegex = /(?:(?:\+?972|0)[-.\s]?)?(?:5\d|7\d|2|3|4|8|9)\d{7}/g;
-        const urlRegex = /(https?:\/\/[^\s]+)/g;
-        const numberRegex = /\b\d{4,}\b/g; // Redact standalone numbers of 4+ digits to avoid redacting years
-        const symbolsRegex = /[@#$%^&*()_+\-=\[\]{}|~`]/g; // Redact specific symbols, leaving punctuation
-
-        // Replace found PII with blocks
-        blurredText = blurredText.replace(emailRegex, placeholder.repeat(10));
-        blurredText = blurredText.replace(phoneRegex, placeholder.repeat(10));
-        blurredText = blurredText.replace(urlRegex, placeholder.repeat(15));
-        blurredText = blurredText.replace(numberRegex, match => placeholder.repeat(match.length));
-        blurredText = blurredText.replace(symbolsRegex, placeholder);
-
-        // Redact the student's actual name parts
-        if (studentName) {
-            const nameParts = studentName.split(' ').filter(part => part.length >= 2);
-            nameParts.forEach(part => {
-                // Create a case-insensitive regex for each part of the name
-                const regex = new RegExp(part.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'gi');
-                blurredText = blurredText.replace(regex, placeholder.repeat(part.length));
-            });
-        }
-
-        return blurredText;
-    }
-
     static anonymizeStudentForRecruiterView(student) {
         if (!student) return null;
 
@@ -262,13 +230,15 @@ class StudentUtils {
             id: student._id,
             // Anonymized fields
             name: placeholder,
-            personalStatement: this.blurSensitiveInfo(student.personalStatement, student.name),
-            additionalInfo: this.blurSensitiveInfo(student.additionalInfo, student.name),
+            personalStatement: maskSensitiveData(student.personalStatement),
+            additionalInfo: maskSensitiveData(student.additionalInfo),
+            specialRoles: maskSensitiveData(student.specialRoles),
+            softSkills: maskSensitiveData(student.softSkills),
+            keyInfo: maskSensitiveData(student.keyInfo),
 
             // Fields to keep
             education: education,
             workExperience: student.workExperience,
-            specialRoles: this.blurSensitiveInfo(student.specialRoles, student.name),
             location: student.location,
             availability: student.availability,
             completionPercentage: this.calculateCompletionScore(student),
